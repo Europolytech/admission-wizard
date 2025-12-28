@@ -582,6 +582,45 @@ function buildZohoPrefillUrl(stu) {
 
   // ====== State ======
   let currentStudent = null;
+// ===== Zoho Prefill Buttons wiring =====
+const openZohoBtn = document.getElementById("openZohoPrefillBtn");
+const copyZohoBtn = document.getElementById("copyZohoPrefillBtn");
+const zohoHint = document.getElementById("zohoPrefillHint");
+
+function updateZohoButtons() {
+  const hasStudent = !!(currentStudent && currentStudent.Email);
+  if (openZohoBtn) openZohoBtn.disabled = !hasStudent;
+  if (copyZohoBtn) copyZohoBtn.disabled = !hasStudent;
+
+  if (zohoHint) {
+    zohoHint.textContent = hasStudent
+      ? "Ready: click Open to launch the pre-filled form, or Copy link to paste into the Conditional LoA email."
+      : "";
+  }
+}
+
+if (openZohoBtn) {
+  openZohoBtn.addEventListener("click", () => {
+    if (!currentStudent) return alert("Load a student first.");
+    const url = buildZohoPrefillUrl(currentStudent);
+    window.open(url, "_blank", "noopener,noreferrer");
+  });
+}
+
+if (copyZohoBtn) {
+  copyZohoBtn.addEventListener("click", async () => {
+    if (!currentStudent) return alert("Load a student first.");
+    const url = buildZohoPrefillUrl(currentStudent);
+
+    try {
+      await navigator.clipboard.writeText(url);
+      if (zohoHint) zohoHint.textContent = "Copied ✔ Now paste it into the Conditional LoA email.";
+    } catch {
+      // Fallback if clipboard permission is blocked
+      prompt("Copy this link:", url);
+    }
+  });
+}
 
   // Populate stages
   const stageSelect = document.getElementById("stageSelect");
@@ -648,11 +687,13 @@ async function api(action, payload) {
     document.getElementById("updateStageBtn").disabled = !stu;
     document.getElementById("printCardBtn").disabled = !stu;
 
-    if (stu) {
+      if (stu) {
       stageSelect.value = "";
       document.getElementById("stageGuidance").innerHTML =
         `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update when done.</div>`;
     }
+
+    updateZohoButtons();
   }
 
   async function refreshList() {
@@ -762,5 +803,6 @@ async function api(action, payload) {
 </script>
 </body>
 </html>
+
 
 
