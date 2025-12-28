@@ -439,6 +439,23 @@
         <select id="stageSelect" disabled>
           <option value="">Select stage…</option>
         </select>
+<!-- Acceptance & Declarations (Zoho Prefill) -->
+<div style="margin-top:10px;">
+  <div class="small muted" style="margin-bottom:8px;">
+    Use this when the stage is <b>Conditional LoA Issued</b>. This opens a pre-filled Zoho form for the loaded student.
+  </div>
+
+  <div style="display:flex; gap:10px;">
+    <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">
+      Open Acceptance & Declarations Form
+    </button>
+    <button id="copyZohoPrefillBtn" class="secondary" disabled style="width:100%;">
+      Copy link
+    </button>
+  </div>
+
+  <div id="zohoPrefillHint" class="small muted" style="margin-top:8px;"></div>
+</div>
 
         <label>Details / note (will be logged)</label>
         <textarea id="details" rows="3" placeholder="E.g., Checked passport + academic docs. Missing English certificate; requested via email."></textarea>
@@ -504,6 +521,25 @@
 
   // ===== PIN CONFIG =====
   const ACCESS_PIN = "Europolytech25.";
+// ===== Zoho Prefill Form (Acceptance & Declarations) =====
+const ZOHO_FORM_BASE_URL =
+  "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
+
+// Build a prefilled Zoho Forms URL from the currently loaded student
+function buildZohoPrefillUrl(stu) {
+  if (!stu) return "";
+
+  const params = new URLSearchParams({
+    StudentID: stu.StudentID || "",
+    FullName: stu.FullName || "",
+    Email: stu.Email || "",
+    Programme: stu.Programme || "",
+    Intake: stu.Intake || "",
+    Nationality: stu.Nationality || ""
+  });
+
+  return `${ZOHO_FORM_BASE_URL}?${params.toString()}`;
+}
 
   function checkPin() {
     const entered = (document.getElementById("pinInput").value || "").trim();
@@ -726,4 +762,5 @@ async function api(action, payload) {
 </script>
 </body>
 </html>
+
 
