@@ -30,6 +30,65 @@
   </style>
 </head>
 <body>
+<!-- PIN Gate -->
+<div id="pinGate" style="
+  position: fixed;
+  inset: 0;
+  background: #f7f7f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+">
+  <div style="
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    text-align: center;
+  ">
+    <h2 style="margin-bottom: 6px;">Restricted Access</h2>
+    <p style="font-size: 13px; color: #555; margin-bottom: 16px;">
+      Enter the internal access PIN to continue.
+    </p>
+
+    <input
+      id="pinInput"
+      type="password"
+      placeholder="Europolytech25"
+      style="
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        margin-bottom: 12px;
+      "
+    />
+
+    <button
+      onclick="checkPin()"
+      style="
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: #222;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+      "
+    >
+      Access
+    </button>
+
+    <div id="pinError" style="margin-top: 10px; color: #b91c1c; font-size: 13px; display: none;">
+      Incorrect PIN. Please try again.
+    </div>
+  </div>
+</div>
 
 <div class="row">
   <div class="card" style="flex:1; min-width: 320px;">
@@ -313,6 +372,27 @@
     await refreshList();
   })();
 </script>
+<script>
+  // ===== PIN CONFIG =====
+  const ACCESS_PIN = "EP-Admissions-2026"; // ← CHANGE THIS
 
+  function checkPin() {
+    const entered = document.getElementById("pinInput").value;
+    if (entered === ACCESS_PIN) {
+      document.getElementById("pinGate").style.display = "none";
+      sessionStorage.setItem("ep_pin_ok", "1");
+    } else {
+      document.getElementById("pinError").style.display = "block";
+    }
+  }
+
+  // Keep unlocked during session
+  window.addEventListener("load", () => {
+    if (sessionStorage.getItem("ep_pin_ok") === "1") {
+      document.getElementById("pinGate").style.display = "none";
+    }
+  });
+</script>
 </body>
+
 </html>
