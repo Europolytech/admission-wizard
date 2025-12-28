@@ -559,16 +559,31 @@
       `<b>${s ? s.key : "Guidance"}</b><div class="small muted" style="margin-top:6px;">${s ? s.guide : ""}</div>`;
   });
 
-  async function api(action, payload) {
-    const res = await fetch(API_URL, {
+async function api(action, payload) {
+  let res;
+
+  try {
+    res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type":"application/json" },
+      // IMPORTANT: no Content-Type header (avoids CORS preflight)
       body: JSON.stringify({ action, ...payload })
     });
-    const json = await res.json();
-    if (!json.ok) throw new Error(json.error || "API error");
-    return json.data;
+  } catch (err) {
+    throw new Error("Failed to reach the API. Check the Apps Script deployment access and URL.");
   }
+
+  const text = await res.text();
+
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    throw new Error("API did not return JSON. First 200 chars: " + text.slice(0, 200));
+  }
+
+  if (!json.ok) throw new Error(json.error || "API error");
+  return json.data;
+}
 
   function officer() {
     return (document.getElementById("officerName").value || "").trim();
