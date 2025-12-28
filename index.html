@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admissions Guidance Wizard (Standalone)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 20px; line-height: 1.35; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; background: #fff; }
+    .card h2 { margin: 0 0 10px 0; font-size: 18px; }
+    label { display:block; font-size: 12px; margin-top: 10px; color: #444; }
+    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 10px; }
+    button { padding: 10px 12px; border-radius: 10px; border: 1px solid #222; background: #222; color: #fff; cursor: pointer; }
+    button.secondary { background: #fff; color:#222; }
+    button:disabled { opacity: .5; cursor:not-allowed; }
+    .small { font-size: 12px; color: #555; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; font-size: 13px; }
+    .pill { display:inline-block; padding: 3px 10px; border:1px solid #ddd; border-radius: 999px; font-size: 12px; }
+    .muted { color:#666; }
+    .split { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 900px){ .split{ grid-template-columns:1fr; } }
+    /* Print card only */
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea { position: fixed; left: 0; top: 0; width: 100%; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="row">
+  <div class="card" style="flex:1; min-width: 320px;">
+    <h2>Officer session</h2>
+    <label>Officer name (typed, lightweight)</label>
+    <input id="officerName" placeholder="e.g., Amine / Sarah Smith" />
+    <div class="small muted" style="margin-top:8px;">
+      This name will be written into the audit log for each action.
+    </div>
+  </div>
+
+  <div class="card" style="flex:2; min-width: 320px;">
+    <h2>Create / load student</h2>
+    <div class="split">
+      <div>
+        <label>Full name</label>
+        <input id="fullName" placeholder="Student full name" />
+      </div>
+      <div>
+        <label>Email (key identifier)</label>
+        <input id="email" placeholder="student@email.com" />
+      </div>
+      <div>
+        <label>Programme</label>
+        <input id="programme" placeholder="e.g., SkillCamp Business" />
+      </div>
+      <div>
+        <label>Intake</label>
+        <input id="intake" placeholder="e.g., Feb 2026" />
+      </div>
+      <div>
+        <label>Nationality</label>
+        <input id="nationality" placeholder="e.g., Pakistan" />
+      </div>
+      <div style="display:flex; align-items:end; gap:10px;">
+        <button id="createLoadBtn">Create / Load</button>
+        <button class="secondary" id="refreshListBtn">Refresh list</button>
+      </div>
+    </div>
+    <div id="currentStudentMeta" class="small" style="margin-top:10px;"></div>
+  </div>
+</div>
+
+<div class="row" style="margin-top:16px;">
+  <div class="card" style="flex:1; min-width: 340px;">
+    <h2>Guided process</h2>
+    <div class="small muted">Pick the next stage when you have completed the checks and manual Zoho actions.</div>
+
+    <label>Current stage</label>
+    <div id="currentStage" class="pill">No student loaded</div>
+
+    <label style="margin-top:14px;">Move to next stage</label>
+    <select id="stageSelect" disabled>
+      <option value="">Select stage…</option>
+    </select>
+
+    <label>Details / note (will be logged)</label>
+    <textarea id="details" rows="3" placeholder="E.g., Checked passport + academic docs. Missing English certificate; requested via email."></textarea>
+
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="updateStageBtn" disabled>Log update</button>
+      <button class="secondary" id="printCardBtn" disabled>Print / Save as PDF</button>
+    </div>
+
+    <div id="stageGuidance" class="card" style="margin-top:14px; border-style:dashed;">
+      <b>Guidance will appear here.</b>
+      <div class="small muted">Load a student and select a stage.</div>
+    </div>
+  </div>
+
+  <div class="card" style="flex:2; min-width: 340px;">
+    <h2>All students (from Google Sheet)</h2>
+    <div class="small muted">This is your lightweight operational dashboard.</div>
+    <div style="overflow:auto; margin-top:10px;">
+      <table id="studentsTable">
+        <thead>
+          <tr>
+            <th>StudentID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Programme</th>
+            <th>Stage</th>
+            <th>Updated</th>
+            <th>By</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Print area -->
+<div id="printArea" class="card" style="margin-top:20px; display:none;">
+  <h2 style="margin:0 0 8px 0;">Student Status Card</h2>
+  <div class="small muted" id="printGenerated"></div>
+  <div style="margin-top:10px;">
+    <div><b>Student:</b> <span id="pName"></span></div>
+    <div><b>StudentID:</b> <span id="pId"></span></div>
+    <div><b>Email:</b> <span id="pEmail"></span></div>
+    <div><b>Programme:</b> <span id="pProgramme"></span></div>
+    <div><b>Intake:</b> <span id="pIntake"></span></div>
+    <div><b>Nationality:</b> <span id="pNationality"></span></div>
+    <div style="margin-top:8px;"><b>Current Stage:</b> <span class="pill" id="pStage"></span></div>
+    <div style="margin-top:8px;"><b>Last Updated:</b> <span id="pUpdated"></span> <span class="muted">by</span> <span id="pBy"></span></div>
+    <div style="margin-top:10px;"><b>Last Action:</b> <span id="pAction"></span></div>
+  </div>
+</div>
+
+<script>
+  // ====== CONFIG: paste your Apps Script Web App URL here ======
+  const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+
+  // ====== Stages ======
+  const STAGES = [
+    { key: "Application Submitted", guide: `Check completeness. If missing docs, request them. Zoho: keep status 'Application Submitted' until complete.` },
+    { key: "Under Review", guide: `Review eligibility (academic + English + short-stay fit). Zoho: add internal note with checks performed.` },
+    { key: "Eligible – Conditional", guide: `Decision: eligible. Zoho: update status to 'Eligible – Conditional'. Prepare Conditional LoA.` },
+    { key: "Conditional LoA Issued", guide: `Send Conditional LoA manually. Zoho: attach LoA PDF + set status 'Conditional LoA Issued'.` },
+    { key: "Accepted by Applicant", guide: `Confirm acceptance received (email/form). Zoho: upload evidence + set status 'Accepted by Applicant'.` },
+    { key: "Declarations Signed", guide: `Collect signed declarations (no-work, short-stay, refund policy). Zoho: upload + tick compliance + set status 'Declarations Signed'.` },
+    { key: "Fees Paid", guide: `Verify payment received + receipt issued. Zoho: set Payment Status 'Paid' + set status 'Fees Paid'.` },
+    { key: "Final Enrolment Confirmed", guide: `Issue final enrolment confirmation manually (visa/border usable). Zoho: attach + set status 'Final Enrolment Confirmed'.` },
+    { key: "Enrolled / Arrived", guide: `Confirm arrival, collect entry stamp if relevant, start attendance tracking. Zoho: set status 'Enrolled / Arrived'.` },
+    { key: "Completed", guide: `Programme completed. Zoho: set status 'Completed' + archive documents as per policy.` },
+    { key: "Rejected", guide: `Not eligible. Zoho: set status 'Rejected' + record reason clearly.` },
+    { key: "Withdrawn", guide: `Applicant withdrew. Zoho: set status 'Withdrawn' + record reason if known.` },
+  ];
+
+  // ====== State ======
+  let currentStudent = null;
+
+  // Populate stages
+  const stageSelect = document.getElementById("stageSelect");
+  STAGES.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.key;
+    opt.textContent = s.key;
+    stageSelect.appendChild(opt);
+  });
+
+  stageSelect.addEventListener("change", () => {
+    const s = STAGES.find(x => x.key === stageSelect.value);
+    document.getElementById("stageGuidance").innerHTML =
+      `<b>${s ? s.key : "Guidance"}</b><div class="small muted" style="margin-top:6px;">${s ? s.guide : ""}</div>`;
+  });
+
+  async function api(action, payload) {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ action, ...payload })
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || "API error");
+    return json.data;
+  }
+
+  function officer() {
+    return (document.getElementById("officerName").value || "").trim();
+  }
+
+  function setStudentUI(stu) {
+    currentStudent = stu;
+    document.getElementById("currentStage").textContent = stu ? (stu.CurrentStage || "—") : "No student loaded";
+    document.getElementById("currentStudentMeta").textContent = stu
+      ? `Loaded: ${stu.FullName || "—"} (${stu.Email}) · ID: ${stu.StudentID} · Updated: ${stu.LastUpdatedAt || "—"} by ${stu.LastUpdatedBy || "—"}`
+      : "";
+
+    stageSelect.disabled = !stu;
+    document.getElementById("updateStageBtn").disabled = !stu;
+    document.getElementById("printCardBtn").disabled = !stu;
+
+    if (stu) {
+      stageSelect.value = "";
+      document.getElementById("stageGuidance").innerHTML =
+        `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update when done.</div>`;
+    }
+  }
+
+  async function refreshList() {
+    const list = await api("listStudents", {});
+    const tbody = document.querySelector("#studentsTable tbody");
+    tbody.innerHTML = "";
+    list.forEach(s => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${s.StudentID || ""}</td>
+        <td>${s.FullName || ""}</td>
+        <td><a href="#" data-email="${s.Email}">${s.Email || ""}</a></td>
+        <td>${s.Programme || ""}</td>
+        <td><span class="pill">${s.CurrentStage || ""}</span></td>
+        <td>${s.LastUpdatedAt || ""}</td>
+        <td>${s.LastUpdatedBy || ""}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Click email to load
+    tbody.querySelectorAll("a[data-email]").forEach(a => {
+      a.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const email = a.getAttribute("data-email");
+        const stu = await api("getStudentByEmail", { email });
+        setStudentUI(stu);
+      });
+    });
+  }
+
+  document.getElementById("createLoadBtn").addEventListener("click", async () => {
+    const off = officer();
+    if (!off) return alert("Please type the officer name first.");
+
+    const payload = {
+      officer: off,
+      fullName: document.getElementById("fullName").value,
+      email: document.getElementById("email").value,
+      programme: document.getElementById("programme").value,
+      intake: document.getElementById("intake").value,
+      nationality: document.getElementById("nationality").value,
+    };
+
+    try {
+      const stu = await api("createOrLoadStudent", payload);
+      setStudentUI(stu);
+      await refreshList();
+    } catch (e) {
+      alert(e.message);
+    }
+  });
+
+  document.getElementById("refreshListBtn").addEventListener("click", async () => {
+    try { await refreshList(); } catch(e){ alert(e.message); }
+  });
+
+  document.getElementById("updateStageBtn").addEventListener("click", async () => {
+    const off = officer();
+    if (!off) return alert("Please type the officer name first.");
+    if (!currentStudent) return alert("Load a student first.");
+    const newStage = stageSelect.value;
+    if (!newStage) return alert("Select a stage.");
+    const details = document.getElementById("details").value;
+
+    try {
+      const stu = await api("updateStage", { email: currentStudent.Email, officer: off, newStage, details });
+      setStudentUI(stu);
+      document.getElementById("details").value = "";
+      await refreshList();
+      alert("Logged. (Reminder: now go to Zoho and update the record manually as per guidance.)");
+    } catch (e) {
+      alert(e.message);
+    }
+  });
+
+  document.getElementById("printCardBtn").addEventListener("click", () => {
+    if (!currentStudent) return;
+    // Populate print card
+    document.getElementById("pName").textContent = currentStudent.FullName || "";
+    document.getElementById("pId").textContent = currentStudent.StudentID || "";
+    document.getElementById("pEmail").textContent = currentStudent.Email || "";
+    document.getElementById("pProgramme").textContent = currentStudent.Programme || "";
+    document.getElementById("pIntake").textContent = currentStudent.Intake || "";
+    document.getElementById("pNationality").textContent = currentStudent.Nationality || "";
+    document.getElementById("pStage").textContent = currentStudent.CurrentStage || "";
+    document.getElementById("pUpdated").textContent = currentStudent.LastUpdatedAt || "";
+    document.getElementById("pBy").textContent = currentStudent.LastUpdatedBy || "";
+    document.getElementById("pAction").textContent = currentStudent.LastAction || "";
+    document.getElementById("printGenerated").textContent = `Generated: ${new Date().toLocaleString()} · Officer session: ${officer() || "—"}`;
+
+    document.getElementById("printArea").style.display = "block";
+    window.print();
+    document.getElementById("printArea").style.display = "none";
+  });
+
+  // Initial load
+  (async () => {
+    if (API_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")) {
+      alert("Set API_URL in the HTML to your Apps Script Web App URL.");
+      return;
+    }
+    await refreshList();
+  })();
+</script>
+
+</body>
+</html>
