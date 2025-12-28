@@ -209,6 +209,17 @@
     button.accent:hover{
       box-shadow: 0 10px 24px rgba(255,210,42,.20);
     }
+/* Zoho Prefill buttons – responsive layout */
+.zohoBtnRow{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.zohoBtnRow button{
+  flex: 1 1 220px;
+  min-width: 220px;
+}
 
     /* Pills + table */
     .pill{
@@ -445,7 +456,7 @@
     Use this when the stage is <b>Conditional LoA Issued</b>. This opens a pre-filled Zoho form for the loaded student.
   </div>
 
-  <div style="display:flex; gap:10px;">
+  <div class="zohoBtnRow">
     <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">
       Open Acceptance & Declarations Form
     </button>
@@ -803,6 +814,7 @@ async function api(action, payload) {
 </script>
 </body>
 </html>
+
 
 
 
