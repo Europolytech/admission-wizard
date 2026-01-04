@@ -42,7 +42,6 @@
       padding: 22px 18px 40px;
     }
 
-    /* Header */
     .topbar{
       display:flex;
       align-items:center;
@@ -57,11 +56,7 @@
       margin-bottom: 16px;
     }
 
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
+    .brand{ display:flex; flex-direction:column; gap:2px; }
     .brand .title{
       font-weight: 800;
       letter-spacing: -0.02em;
@@ -83,25 +78,9 @@
       color: var(--primary);
       font-weight: 700;
     }
-    .brand .subtitle{
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .brand .subtitle{ color: var(--muted); font-size: 12px; }
 
-    .hint{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* Layout */
-    .row{
-      display:flex;
-      gap:16px;
-      flex-wrap: wrap;
-    }
+    .row{ display:flex; gap:16px; flex-wrap: wrap; }
 
     .card{
       border: 1px solid var(--border);
@@ -135,7 +114,7 @@
       border-radius: var(--radius2);
       background: rgba(255,255,255,.95);
       outline: none;
-      transition: box-shadow .15s ease, border-color .15s ease, transform .05s ease;
+      transition: box-shadow .15s ease, border-color .15s ease;
       font-size: 14px;
       color: var(--text);
     }
@@ -155,7 +134,6 @@
       .split{ grid-template-columns: 1fr; }
     }
 
-    /* Buttons */
     button{
       display:inline-flex;
       align-items:center;
@@ -169,32 +147,19 @@
       cursor: pointer;
       font-weight: 800;
       letter-spacing: .01em;
-      transition: transform .05s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
+      transition: filter .2s ease, opacity .2s ease;
       min-height: 42px;
-      text-align:center;
       user-select:none;
       white-space:nowrap;
     }
-    button:hover{
-      filter: brightness(1.03);
-      box-shadow: 0 10px 24px rgba(35,79,235,.22);
-    }
-    button:active{ transform: translateY(1px); }
-    button:disabled{
-      opacity: .55;
-      cursor: not-allowed;
-      box-shadow: none;
-      filter:none;
-    }
+    button:hover{ filter: brightness(1.03); }
+    button:disabled{ opacity: .55; cursor: not-allowed; filter:none; }
 
     button.secondary{
       border: 1px solid rgba(15,23,42,.14);
       background: rgba(255,255,255,.9);
       color: var(--text);
       font-weight: 750;
-    }
-    button.secondary:hover{
-      box-shadow: 0 10px 24px rgba(17,24,39,.10);
     }
 
     button.accent{
@@ -203,22 +168,7 @@
       color: #111827;
       font-weight: 900;
     }
-    button.accent:hover{
-      box-shadow: 0 10px 24px rgba(255,210,42,.20);
-    }
 
-    /* Zoho Prefill buttons – responsive layout */
-    .zohoBtnRow{
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .zohoBtnRow button{
-      flex: 1 1 220px;
-      min-width: 220px;
-    }
-
-    /* Applicant big preview card */
     .photoWrap{
       position: relative;
       width: 100%;
@@ -231,14 +181,12 @@
       align-items:center;
       justify-content:center;
     }
-
     #photoPreview{
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: none;
     }
-
     .photoBadge{
       position: absolute;
       left: 10px;
@@ -256,7 +204,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Applicant small avatar in upload panel */
     .avatarWrap{
       width: 64px;
       height: 64px;
@@ -281,7 +228,6 @@
       border-radius: 999px;
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: .01em;
       background: rgba(15,23,42,.85);
       color: #fff;
       border: 1px solid rgba(255,255,255,.22);
@@ -291,7 +237,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Pills + table */
     .pill{
       display:inline-flex;
       align-items:center;
@@ -331,27 +276,12 @@
       color: rgba(15,23,42,.62);
       background: rgba(35,79,235,.04);
     }
-    tbody tr:hover{
-      background: rgba(35,79,235,.04);
-    }
-    a{
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 750;
-    }
+    tbody tr:hover{ background: rgba(35,79,235,.04); }
+
+    a{ color: var(--primary); text-decoration: none; font-weight: 750; }
     a:hover{ text-decoration: underline; }
 
-    .guidance{
-      border-style: dashed;
-      background: rgba(255,255,255,.75);
-    }
-
-    @media print {
-      body * { visibility: hidden; }
-      #printArea, #printArea * { visibility: visible; }
-      #printArea { position: fixed; left: 0; top: 0; width: 100%; margin: 0; }
-      .container{ padding: 0; }
-    }
+    .guidance{ border-style: dashed; background: rgba(255,255,255,.75); }
 
     /* PIN Gate */
     #pinGate{
@@ -388,6 +318,7 @@
 </head>
 
 <body>
+  <!-- PIN Gate -->
   <div id="pinGate" aria-label="PIN access gate">
     <div class="pinCard">
       <div class="pinBrandLine" aria-hidden="true">
@@ -398,12 +329,10 @@
       <p class="pinSub">Enter the internal access PIN to continue.</p>
       <input id="pinInput" type="password" placeholder="Internal password" autocomplete="current-password" />
       <div style="display:flex; gap:10px; margin-top:12px;">
-        <button class="accent" onclick="checkPin()" style="width:100%;">Access</button>
+        <button class="accent" id="pinBtn" style="width:100%;">Access</button>
       </div>
       <div id="pinError">Incorrect PIN. Please try again.</div>
-      <div class="small muted" style="margin-top:12px;">
-        Tip: use browser refresh if the page looks cached after updates.
-      </div>
+      <div class="small muted" style="margin-top:12px;">Tip: hard refresh (Ctrl+F5) after updates.</div>
     </div>
   </div>
 
@@ -414,10 +343,14 @@
           EuroPolytech Admissions Wizard
           <span class="badge">Internal</span>
         </div>
-        <div class="subtitle">Lightweight operational dashboard · Google Sheets log · Manual Zoho updates</div>
+        <div class="subtitle">Google Sheets dashboard · Manual Zoho updates · Photo upload to Drive</div>
       </div>
       <div class="hint" title="EuroPolytech Academy">
-        <img src="https://www.europolytech.academy/EuroPolytech%20Logo%20jpeg.png" alt="EuroPolytech Academy logo" style="height:28px; width:auto; display:block;" />
+        <img
+          src="https://www.europolytech.academy/EuroPolytech%20Logo%20jpeg.png"
+          alt="EuroPolytech Academy logo"
+          style="height:28px; width:auto; display:block;"
+        />
       </div>
     </div>
 
@@ -426,7 +359,7 @@
         <h2>Officer session</h2>
         <label>Officer name (typed)</label>
         <input id="officerName" placeholder="e.g., Amine / Sarah Smith" />
-        <div class="small muted" style="margin-top:8px;">Logged for each action (compliance trail).</div>
+        <div class="small muted" style="margin-top:8px;">Logged for each action (audit trail).</div>
       </div>
 
       <div class="card" style="flex:1; min-width: 260px;">
@@ -441,18 +374,36 @@
       <div class="card" style="flex:2; min-width: 320px;">
         <h2>Create / load student</h2>
         <div class="split">
-          <div><label>Full name</label><input id="fullName" placeholder="Student full name" /></div>
-          <div><label>Email (key identifier)</label><input id="email" placeholder="student@email.com" /></div>
-          <div><label>Programme</label><input id="programme" placeholder="SkillCamp Business" /></div>
-          <div><label>Intake</label><input id="intake" placeholder="Feb 2026" /></div>
-          <div><label>Nationality</label><input id="nationality" placeholder="e.g., Pakistan" /></div>
+          <div>
+            <label>Full name</label>
+            <input id="fullName" placeholder="Student full name" />
+          </div>
+          <div>
+            <label>Email (key identifier)</label>
+            <input id="email" placeholder="student@email.com" />
+          </div>
+          <div>
+            <label>Programme</label>
+            <input id="programme" placeholder="e.g., OTHM Level 3" />
+          </div>
+          <div>
+            <label>Intake</label>
+            <input id="intake" placeholder="e.g., Feb 2026" />
+          </div>
+          <div>
+            <label>Nationality</label>
+            <input id="nationality" placeholder="e.g., Pakistan" />
+          </div>
+
           <div style="display:flex; align-items:end; gap:10px;">
             <button id="createLoadBtn" style="width:100%;">Create / Load</button>
             <button class="secondary" id="refreshListBtn" style="width:100%;">Refresh list</button>
           </div>
         </div>
+
         <div id="currentStudentMeta" class="small" style="margin-top:10px;"></div>
 
+        <!-- Photo Panel -->
         <div id="photoPanel" class="card" style="margin-top:12px; display:none;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
             <div style="display:flex; align-items:center; gap:12px;">
@@ -462,17 +413,20 @@
               </div>
               <div>
                 <div style="font-weight:900; letter-spacing:-0.02em;">Applicant photo</div>
-                <div class="small muted" id="photoMetaLine">Load student to manage photo.</div>
+                <div class="small muted" id="photoMetaLine">Load a student to manage photo.</div>
               </div>
             </div>
           </div>
+
           <div style="margin-top:12px;">
             <label>Upload / update photo</label>
             <input id="photoInput" type="file" accept="image/*" />
+
             <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
               <button id="uploadPhotoBtn" type="button" class="accent" disabled style="flex:1 1 220px;">Upload photo</button>
               <button id="clearPhotoSelectionBtn" type="button" class="secondary" disabled style="flex:1 1 220px;">Clear selection</button>
             </div>
+
             <div id="photoHint" class="small muted" style="margin-top:8px;"></div>
           </div>
         </div>
@@ -482,32 +436,38 @@
     <div class="row" style="margin-top:16px;">
       <div class="card" style="flex:1; min-width: 340px;">
         <h2>Guided process</h2>
+
         <label>Current stage</label>
         <div id="currentStage" class="pill neutral">No student loaded</div>
+
         <label style="margin-top:14px;">Move to next stage</label>
-        <select id="stageSelect" disabled><option value="">Select stage…</option></select>
-        <div id="zohoBlock" style="margin-top:10px; display:none;">
-          <div class="zohoBtnRow">
-            <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">Open Zoho Form</button>
-            <button id="copyZohoPrefillBtn" class="secondary" disabled style="width:100%;">Copy link</button>
-          </div>
-          <div id="zohoPrefillHint" class="small muted" style="margin-top:8px;"></div>
-        </div>
+        <select id="stageSelect" disabled>
+          <option value="">Select stage…</option>
+        </select>
+
         <label>Details / note (will be logged)</label>
-        <textarea id="details" rows="3" placeholder="Checked docs, etc."></textarea>
+        <textarea id="details" rows="3" placeholder="Checked docs, requested missing items, etc."></textarea>
+
         <div style="display:flex; gap:10px; margin-top:10px;">
           <button id="updateStageBtn" disabled style="width:100%;">Log update</button>
           <button class="secondary" id="printCardBtn" disabled style="width:100%;">Print / Save PDF</button>
         </div>
-        <div id="stageGuidance" class="card guidance" style="margin-top:14px;"><b>Guidance will appear here.</b></div>
+
+        <div id="stageGuidance" class="card guidance" style="margin-top:14px;">
+          <b>Guidance will appear here.</b>
+          <div class="small muted">Load a student and select a stage.</div>
+        </div>
       </div>
 
       <div class="card" style="flex:2; min-width: 340px;">
         <h2>All students (Live Dashboard)</h2>
+        <div class="small muted">Click an email to load that student.</div>
         <div style="overflow:auto; margin-top:10px;">
-          <table id="studentsTable">
+          <table id="studentsTable" aria-label="Students list">
             <thead>
-              <tr><th>ID</th><th>Name</th><th>Email</th><th>Prog</th><th>Stage</th><th>Updated</th><th>By</th></tr>
+              <tr>
+                <th>StudentID</th><th>Name</th><th>Email</th><th>Programme</th><th>Stage</th><th>Updated</th><th>By</th>
+              </tr>
             </thead>
             <tbody></tbody>
           </table>
@@ -515,47 +475,243 @@
       </div>
     </div>
 
+    <!-- Print -->
     <div id="printArea" class="card" style="margin-top:20px; display:none;">
       <h2 style="margin:0 0 8px 0;">Student Status Card</h2>
       <div class="small muted" id="printGenerated"></div>
       <div style="margin-top:10px;">
         <div><b>Student:</b> <span id="pName"></span></div>
-        <div><b>ID:</b> <span id="pId"></span></div>
+        <div><b>StudentID:</b> <span id="pId"></span></div>
         <div><b>Email:</b> <span id="pEmail"></span></div>
-        <div><b>Stage:</b> <span class="pill" id="pStage"></span></div>
+        <div><b>Programme:</b> <span id="pProgramme"></span></div>
+        <div><b>Intake:</b> <span id="pIntake"></span></div>
+        <div><b>Nationality:</b> <span id="pNationality"></span></div>
+        <div style="margin-top:8px;"><b>Current Stage:</b> <span class="pill" id="pStage"></span></div>
+        <div style="margin-top:8px;"><b>Last Updated:</b> <span id="pUpdated"></span> <span class="muted">by</span> <span id="pBy"></span></div>
       </div>
     </div>
   </div>
 
 <script>
   // ====== CONFIG ======
-  const API_URL = "https://script.google.com/macros/s/AKfycbwfftiKCNvrGvhHXH9KeobeFybuEb3-fJEK8w7fQJJOySKl8d1dXblKAAuiztPkthgi2A/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbx1_ka9lsMrAJFZ9Pu3MsZgO9sHTRKSSrFoJ_le22Z5mh1wCsj38G8G4GzEtssdOH-hvQ/exec";
   const ACCESS_PIN = "Europolytech25.";
-  const ZOHO_FORM_BASE_URL = "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
 
+  // ====== Stages (UI only) ======
+  const STAGES = [
+    { key: "Application Submitted", guide: "Check completeness. Request missing documents if needed." },
+    { key: "Under Review", guide: "Review eligibility (academic + English + fit)." },
+    { key: "Eligible – Conditional", guide: "Eligible. Prepare Conditional LoA and collect declarations." },
+    { key: "Conditional LoA Issued", guide: "Send Conditional LoA and record it in Zoho manually." },
+    { key: "Accepted by Applicant", guide: "Confirm acceptance evidence received." },
+    { key: "Declarations Signed", guide: "Collect signed declarations; keep in Zoho." },
+    { key: "Fees Paid", guide: "Verify payment and issue receipt." },
+    { key: "Final Enrolment Confirmed", guide: "Issue final confirmation; upload documents to Zoho." },
+    { key: "Enrolled / Arrived", guide: "Confirm arrival and start attendance tracking." },
+    { key: "Completed", guide: "Programme completed and archived." },
+    { key: "Rejected", guide: "Not eligible; record reason." },
+    { key: "Withdrawn", guide: "Applicant withdrew; record reason." },
+  ];
+
+  // ====== State ======
   let currentStudent = null;
   let selectedPhotoDataUrl = "";
 
-  // ====== API HELPER ======
-  async function api(action, payload) {
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({ action, ...payload })
-      });
-      const text = await res.text();
-      const json = JSON.parse(text);
-      if (!json.ok) throw new Error(json.error || "API error");
-      return json.data;
-    } catch (err) {
-      console.error(err);
-      throw new Error("Connection failed: " + err.message);
-    }
+  // ====== Helpers ======
+  function officer() {
+    return (document.getElementById("officerName").value || "").trim();
   }
 
-  // ====== PIN LOGIC ======
+  function safeEmail(v) {
+    return String(v || "").trim().toLowerCase();
+  }
+
+  async function api(action, payload) {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ action, ...payload })
+    });
+    const text = await res.text();
+    let json;
+    try { json = JSON.parse(text); }
+    catch { throw new Error("API did not return JSON: " + text.slice(0, 160)); }
+    if (!json.ok) throw new Error(json.error || "API error");
+    return json.data;
+  }
+
+  function initialsFromName(name) {
+    const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+    const a = parts[0] ? parts[0][0] : "E";
+    const b = parts[1] ? parts[1][0] : "P";
+    return (a + b).toUpperCase();
+  }
+
+  function makeInitialsAvatarDataUrl(initials) {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="rgba(35,79,235,0.25)"/>
+            <stop offset="100%" stop-color="rgba(255,210,42,0.25)"/>
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" rx="24" fill="url(#g)"/>
+        <text x="50%" y="54%" font-size="46" font-family="Arial" font-weight="800"
+              fill="#0f172a" text-anchor="middle" dominant-baseline="middle">${initials}</text>
+      </svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+
+  function resolvePhotoSrc(stu) {
+    if (!stu) return "";
+    const url = String(stu.PhotoURL || "").trim();
+    const fileId = String(stu.PhotoFileId || "").trim();
+    const bust = "v=" + Date.now();
+
+    if (url) return url + (url.includes("?") ? "&" : "?") + bust;
+    if (fileId) return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w800&${bust}`;
+    return "";
+  }
+
+  function setBigPreview(stu) {
+    const bigImg = document.getElementById("photoPreview");
+    const badge = document.getElementById("photoBadge");
+    const meta = document.getElementById("photoMeta");
+
+    badge.textContent = (stu && stu.CurrentStage) ? stu.CurrentStage : "No student loaded";
+
+    const src = resolvePhotoSrc(stu);
+    if (!src) {
+      bigImg.removeAttribute("src");
+      bigImg.style.display = "none";
+      meta.textContent = "No photo uploaded yet.";
+      return;
+    }
+
+    bigImg.onload = () => { bigImg.style.display = "block"; };
+    bigImg.onerror = () => {
+      bigImg.style.display = "none";
+      meta.textContent = "Photo exists but failed to load. If Drive blocks it, we’ll switch to proxy mode in back-end.";
+    };
+    bigImg.src = src;
+    meta.textContent = "Photo stored in Drive and linked to the student record.";
+  }
+
+  function renderPhotoPanel(stu) {
+    const panel = document.getElementById("photoPanel");
+    const appPhotoImg = document.getElementById("appPhotoImg");
+    const appStatusBadge = document.getElementById("appStatusBadge");
+    const photoMetaLine = document.getElementById("photoMetaLine");
+    const hint = document.getElementById("photoHint");
+    const uploadBtn = document.getElementById("uploadPhotoBtn");
+    const clearBtn = document.getElementById("clearPhotoSelectionBtn");
+
+    if (!stu || !stu.Email) {
+      panel.style.display = "none";
+      return;
+    }
+    panel.style.display = "block";
+
+    appStatusBadge.textContent = String(stu.CurrentStage || "No status");
+    photoMetaLine.textContent = `StudentID: ${stu.StudentID || "—"} · Email: ${stu.Email || "—"}`;
+
+    const storedSrc = resolvePhotoSrc(stu);
+    if (storedSrc) appPhotoImg.src = storedSrc;
+    else if (selectedPhotoDataUrl) appPhotoImg.src = selectedPhotoDataUrl;
+    else appPhotoImg.src = makeInitialsAvatarDataUrl(initialsFromName(stu.FullName));
+
+    const canUpload = !!selectedPhotoDataUrl;
+    uploadBtn.disabled = !canUpload;
+    clearBtn.disabled = !canUpload;
+
+    const hasStored = !!(String(stu.PhotoURL || "").trim() || String(stu.PhotoFileId || "").trim());
+    hint.textContent = hasStored
+      ? "Current photo is saved. You can upload a new one anytime."
+      : "No photo saved yet. Choose an image and click Upload.";
+  }
+
+  function setStudentUI(stu) {
+    currentStudent = stu || null;
+
+    const stageEl = document.getElementById("currentStage");
+    const meta = document.getElementById("currentStudentMeta");
+    const stageSelect = document.getElementById("stageSelect");
+
+    if (stu && stu.CurrentStage) {
+      stageEl.textContent = stu.CurrentStage;
+      stageEl.classList.remove("neutral");
+    } else {
+      stageEl.textContent = "No student loaded";
+      stageEl.classList.add("neutral");
+    }
+
+    meta.textContent = stu
+      ? `Loaded: ${stu.FullName || "—"} (${stu.Email || "—"}) · ID: ${stu.StudentID || "—"} · Updated: ${stu.LastUpdatedAt || "—"} by ${stu.LastUpdatedBy || "—"}`
+      : "";
+
+    stageSelect.disabled = !stu;
+    document.getElementById("updateStageBtn").disabled = !stu;
+    document.getElementById("printCardBtn").disabled = !stu;
+
+    // reset guidance
+    if (stu) {
+      stageSelect.value = "";
+      document.getElementById("stageGuidance").innerHTML =
+        `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update.</div>`;
+    }
+
+    setBigPreview(stu);
+    renderPhotoPanel(stu);
+  }
+
+  async function refreshList() {
+    const list = await api("listStudents", {});
+    const tbody = document.querySelector("#studentsTable tbody");
+    tbody.innerHTML = "";
+
+    list.forEach(s => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${s.StudentID || ""}</td>
+        <td>${s.FullName || ""}</td>
+        <td><a href="#" data-email="${String(s.Email || "")}">${s.Email || ""}</a></td>
+        <td>${s.Programme || ""}</td>
+        <td><span class="pill">${s.CurrentStage || ""}</span></td>
+        <td>${(s.LastUpdatedAt || "").toString().replace("T", " ").slice(0,19)}</td>
+        <td>${s.LastUpdatedBy || ""}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll("a[data-email]").forEach(a => {
+      a.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const email = a.getAttribute("data-email");
+        const stu = await api("getStudentByEmail", { email: safeEmail(email) });
+        setStudentUI(stu);
+      });
+    });
+  }
+
+  // ====== Wire stage dropdown ======
+  const stageSelect = document.getElementById("stageSelect");
+  STAGES.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.key;
+    opt.textContent = s.key;
+    stageSelect.appendChild(opt);
+  });
+
+  stageSelect.addEventListener("change", () => {
+    const s = STAGES.find(x => x.key === stageSelect.value);
+    document.getElementById("stageGuidance").innerHTML =
+      `<b>${s ? s.key : "Guidance"}</b><div class="small muted" style="margin-top:6px;">${s ? s.guide : ""}</div>`;
+  });
+
+  // ====== PIN ======
   function checkPin() {
-    if ((document.getElementById("pinInput").value || "").trim() === ACCESS_PIN) {
+    const entered = (document.getElementById("pinInput").value || "").trim();
+    if (entered === ACCESS_PIN) {
       document.getElementById("pinGate").style.display = "none";
       sessionStorage.setItem("ep_pin_ok", "1");
     } else {
@@ -563,174 +719,177 @@
     }
   }
 
+  document.getElementById("pinBtn").addEventListener("click", checkPin);
+  document.addEventListener("keydown", (e) => {
+    const gate = document.getElementById("pinGate");
+    const gateVisible = gate && gate.style.display !== "none";
+    if (gateVisible && e.key === "Enter") checkPin();
+  });
   window.addEventListener("load", () => {
-    if (sessionStorage.getItem("ep_pin_ok") === "1") document.getElementById("pinGate").style.display = "none";
+    if (sessionStorage.getItem("ep_pin_ok") === "1") {
+      document.getElementById("pinGate").style.display = "none";
+    }
   });
 
-  // ====== PHOTO HELPERS ======
-  function resolvePhotoSrc(stu) {
-    if (!stu) return "";
-    const url = String(stu.PhotoURL || "").trim();
-    const fileId = String(stu.PhotoFileId || "").trim();
-    // Cache buster is vital to prevent browser showing old/broken versions
-    if (url) return url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
-    if (fileId) return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800&v=${Date.now()}`;
-    return "";
-  }
+  // ====== Create / Load ======
+  document.getElementById("createLoadBtn").addEventListener("click", async () => {
+    const off = officer();
+    if (!off) return alert("Please type the officer name first.");
 
-  function renderPhotoPanel(stu) {
-    const photoPanel = document.getElementById("photoPanel");
-    if (!stu || !stu.Email) { photoPanel.style.display = "none"; return; }
-    photoPanel.style.display = "block";
+    const payload = {
+      officer: off,
+      fullName: document.getElementById("fullName").value,
+      email: safeEmail(document.getElementById("email").value),
+      programme: document.getElementById("programme").value,
+      intake: document.getElementById("intake").value,
+      nationality: document.getElementById("nationality").value,
+    };
 
-    const storedSrc = resolvePhotoSrc(stu);
-    const appPhotoImg = document.getElementById("appPhotoImg");
-    
-    if (storedSrc) {
-      appPhotoImg.src = storedSrc;
-    } else if (selectedPhotoDataUrl) {
-      appPhotoImg.src = selectedPhotoDataUrl;
-    } else {
-      appPhotoImg.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif">No Photo</text></svg>');
+    if (!payload.email) return alert("Email is required.");
+
+    try {
+      const stu = await api("createOrLoadStudent", payload);
+      setStudentUI(stu);
+      await refreshList();
+    } catch (e) {
+      alert(e.message);
+    }
+  });
+
+  document.getElementById("refreshListBtn").addEventListener("click", async () => {
+    try { await refreshList(); } catch (e) { alert(e.message); }
+  });
+
+  // ====== Stage update ======
+  document.getElementById("updateStageBtn").addEventListener("click", async () => {
+    const off = officer();
+    if (!off) return alert("Please type the officer name first.");
+    if (!currentStudent || !currentStudent.Email) return alert("Load a student first.");
+
+    const newStage = stageSelect.value;
+    if (!newStage) return alert("Select a stage.");
+
+    const details = document.getElementById("details").value;
+
+    try {
+      const stu = await api("updateStage", {
+        email: safeEmail(currentStudent.Email),
+        officer: off,
+        newStage,
+        details,
+        studentId: currentStudent.StudentID || "" // for audit safety
+      });
+
+      setStudentUI(stu);
+      document.getElementById("details").value = "";
+      await refreshList();
+      alert("Logged. Reminder: update Zoho CRM manually as per your process.");
+    } catch (e) {
+      alert(e.message);
+    }
+  });
+
+  // ====== Photo: choose ======
+  document.getElementById("photoInput").addEventListener("change", () => {
+    const input = document.getElementById("photoInput");
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      input.value = "";
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      alert("Please use a smaller image (max ~4MB).");
+      input.value = "";
+      return;
     }
 
-    document.getElementById("uploadPhotoBtn").disabled = !selectedPhotoDataUrl;
-    document.getElementById("clearPhotoSelectionBtn").disabled = !selectedPhotoDataUrl;
-  }
-
-  // ====== PHOTO UPLOAD EVENT ======
-  document.getElementById("photoInput").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 4 * 1024 * 1024) return alert("File too large (Max 4MB)");
-    
     const reader = new FileReader();
     reader.onload = () => {
-      selectedPhotoDataUrl = reader.result;
+      selectedPhotoDataUrl = String(reader.result || "");
       renderPhotoPanel(currentStudent);
+      document.getElementById("photoHint").textContent = "Preview ready ✔ Click Upload photo to save it.";
     };
     reader.readAsDataURL(file);
   });
 
-  document.getElementById("uploadPhotoBtn").addEventListener("click", async () => {
-    const off = (document.getElementById("officerName").value || "").trim();
-    if (!off) return alert("Enter officer name.");
-    
-    const btn = document.getElementById("uploadPhotoBtn");
-    btn.disabled = true;
-    document.getElementById("photoHint").textContent = "Uploading to Drive...";
-
-    try {
-      const result = await api("uploadPhoto", {
-        token: ACCESS_PIN,
-        email: currentStudent.Email,
-        studentId: currentStudent.StudentID,
-        officer: off,
-        dataUrl: selectedPhotoDataUrl
-      });
-
-      // Crucial: Update state with returned data to avoid stale fetch
-      currentStudent = result.student;
-      selectedPhotoDataUrl = "";
-      document.getElementById("photoInput").value = "";
-      
-      setStudentUI(currentStudent);
-      await refreshList();
-      document.getElementById("photoHint").textContent = "Upload successful!";
-    } catch (e) {
-      alert(e.message);
-      document.getElementById("photoHint").textContent = "Upload failed.";
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
+  // ====== Photo: clear ======
   document.getElementById("clearPhotoSelectionBtn").addEventListener("click", () => {
     selectedPhotoDataUrl = "";
     document.getElementById("photoInput").value = "";
     renderPhotoPanel(currentStudent);
   });
 
-  // ====== CORE UI LOGIC ======
-  function setStudentUI(stu) {
-    currentStudent = stu;
-    const stageEl = document.getElementById("currentStage");
-    
-    if (stu) {
-      stageEl.textContent = stu.CurrentStage;
-      stageEl.classList.remove("neutral");
-      document.getElementById("currentStudentMeta").textContent = `ID: ${stu.StudentID} | ${stu.Email}`;
-      
-      // Update Big Preview
-      const bigImg = document.getElementById("photoPreview");
-      const src = resolvePhotoSrc(stu);
-      if (src) {
-        bigImg.src = src;
-        bigImg.style.display = "block";
-      } else {
-        bigImg.style.display = "none";
-      }
-      document.getElementById("photoBadge").textContent = stu.CurrentStage;
-    }
+  // ====== Photo: upload ======
+  document.getElementById("uploadPhotoBtn").addEventListener("click", async () => {
+    const off = officer();
+    if (!off) return alert("Please type the officer name first.");
+    if (!currentStudent || !currentStudent.Email) return alert("Load a student first.");
+    if (!selectedPhotoDataUrl) return alert("Choose a photo first.");
 
-    document.getElementById("stageSelect").disabled = !stu;
-    document.getElementById("updateStageBtn").disabled = !stu;
-    document.getElementById("printCardBtn").disabled = !stu;
-    
-    renderPhotoPanel(stu);
-    updateZohoUI();
-  }
+    const btn = document.getElementById("uploadPhotoBtn");
+    const hint = document.getElementById("photoHint");
+    btn.disabled = true;
+    hint.textContent = "Uploading photo…";
 
-  async function refreshList() {
-    const list = await api("listStudents", {});
-    const tbody = document.querySelector("#studentsTable tbody");
-    tbody.innerHTML = "";
-    list.forEach(s => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${s.StudentID}</td><td>${s.FullName}</td><td><a href="#" class="load-stu" data-email="${s.Email}">${s.Email}</a></td><td>${s.Programme}</td><td><span class="pill">${s.CurrentStage}</span></td><td>${s.LastUpdatedAt.split('T')[0]}</td><td>${s.LastUpdatedBy}</td>`;
-      tbody.appendChild(tr);
-    });
-  }
+    try {
+      const result = await api("uploadPhoto", {
+        token: ACCESS_PIN,
+        email: safeEmail(currentStudent.Email),
+        studentId: currentStudent.StudentID || "",
+        officer: off,
+        dataUrl: selectedPhotoDataUrl
+      });
 
-  document.addEventListener("click", async (e) => {
-    if (e.target.classList.contains("load-stu")) {
-      e.preventDefault();
-      const stu = await api("getStudentByEmail", { email: e.target.dataset.email });
-      setStudentUI(stu);
+      // IMPORTANT: your back-end returns { student: updatedStudent, fileId }
+      const updated = result && result.student ? result.student : null;
+      if (!updated) throw new Error("Upload succeeded but API did not return updated student.");
+
+      selectedPhotoDataUrl = "";
+      document.getElementById("photoInput").value = "";
+
+      setStudentUI(updated);
+      await refreshList();
+
+      hint.textContent = "Uploaded ✔ Photo saved and linked to the student.";
+    } catch (e) {
+      alert(e.message);
+      hint.textContent = "Upload failed. Please try again.";
+    } finally {
+      renderPhotoPanel(currentStudent);
+      btn.disabled = false;
     }
   });
 
-  document.getElementById("createLoadBtn").addEventListener("click", async () => {
-    const payload = {
-      officer: document.getElementById("officerName").value,
-      fullName: document.getElementById("fullName").value,
-      email: document.getElementById("email").value,
-      programme: document.getElementById("programme").value,
-      intake: document.getElementById("intake").value,
-      nationality: document.getElementById("nationality").value,
-    };
-    const stu = await api("createOrLoadStudent", payload);
-    setStudentUI(stu);
-    await refreshList();
+  // ===== Print =====
+  document.getElementById("printCardBtn").addEventListener("click", () => {
+    if (!currentStudent) return;
+
+    document.getElementById("pName").textContent = currentStudent.FullName || "";
+    document.getElementById("pId").textContent = currentStudent.StudentID || "";
+    document.getElementById("pEmail").textContent = currentStudent.Email || "";
+    document.getElementById("pProgramme").textContent = currentStudent.Programme || "";
+    document.getElementById("pIntake").textContent = currentStudent.Intake || "";
+    document.getElementById("pNationality").textContent = currentStudent.Nationality || "";
+    document.getElementById("pStage").textContent = currentStudent.CurrentStage || "";
+    document.getElementById("pUpdated").textContent = currentStudent.LastUpdatedAt || "";
+    document.getElementById("pBy").textContent = currentStudent.LastUpdatedBy || "";
+
+    document.getElementById("printGenerated").textContent =
+      `Generated: ${new Date().toLocaleString()} · Officer session: ${officer() || "—"}`;
+
+    document.getElementById("printArea").style.display = "block";
+    window.print();
+    document.getElementById("printArea").style.display = "none";
   });
 
-  // Zoho UI visibility
-  function updateZohoUI() {
-    const block = document.getElementById("zohoBlock");
-    const isEligible = currentStudent && (currentStudent.CurrentStage || "").includes("Eligible");
-    block.style.display = isEligible ? "block" : "none";
-    document.getElementById("openZohoPrefillBtn").disabled = !isEligible;
-    document.getElementById("copyZohoPrefillBtn").disabled = !isEligible;
-  }
-
-  // Initial Load
-  refreshList();
-
-  const STAGES = ["Application Submitted", "Under Review", "Eligible – Conditional", "Conditional LoA Issued", "Accepted by Applicant", "Declarations Signed", "Fees Paid", "Final Enrolment Confirmed", "Enrolled / Arrived", "Completed", "Rejected", "Withdrawn"];
-  const ss = document.getElementById("stageSelect");
-  STAGES.forEach(st => { const o = document.createElement("option"); o.value = st; o.textContent = st; ss.appendChild(o); });
-
+  // ===== Initial list =====
+  (async () => {
+    try { await refreshList(); }
+    catch (e) { console.warn(e); }
+  })();
 </script>
 </body>
 </html>
-
