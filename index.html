@@ -225,7 +225,7 @@
       aspect-ratio: 4 / 5;
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid rgba(15,23,42,.10);
+      border: 1px solid var(--border);
       background: rgba(15,23,42,.04);
       display:flex;
       align-items:center;
@@ -236,7 +236,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none; /* show only when loaded */
+      display: none;
     }
 
     .photoBadge{
@@ -341,13 +341,11 @@
     }
     a:hover{ text-decoration: underline; }
 
-    /* Guidance panel */
     .guidance{
       border-style: dashed;
       background: rgba(255,255,255,.75);
     }
 
-    /* Print card only */
     @media print {
       body * { visibility: hidden; }
       #printArea, #printArea * { visibility: visible; }
@@ -380,68 +378,29 @@
       text-align:center;
       backdrop-filter: blur(10px);
     }
-    .pinTitle{
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin: 0 0 6px 0;
-    }
-    .pinSub{
-      margin: 0 0 14px 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .pinBrandLine{
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      margin-bottom: 14px;
-      align-items:center;
-    }
-    .pinMark{
-      width: 14px; height: 14px; border-radius: 4px;
-      background: var(--primary);
-      box-shadow: 0 0 0 4px rgba(35,79,235,.14);
-    }
-    .pinMark2{
-      width: 14px; height: 14px; border-radius: 4px;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(255,210,42,.18);
-    }
-    #pinError{
-      margin-top: 10px;
-      color: #b91c1c;
-      font-size: 13px;
-      display:none;
-      font-weight: 700;
-    }
+    .pinTitle{ font-weight: 900; letter-spacing: -0.02em; margin: 0 0 6px 0; }
+    .pinSub{ margin: 0 0 14px 0; color: var(--muted); font-size: 13px; }
+    .pinBrandLine{ display:flex; justify-content:center; gap:10px; margin-bottom: 14px; align-items:center; }
+    .pinMark{ width: 14px; height: 14px; border-radius: 4px; background: var(--primary); box-shadow: 0 0 0 4px rgba(35,79,235,.14); }
+    .pinMark2{ width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px rgba(255,210,42,.18); }
+    #pinError{ margin-top: 10px; color: #b91c1c; font-size: 13px; display:none; font-weight: 700; }
   </style>
 </head>
 
 <body>
-  <!-- PIN Gate -->
   <div id="pinGate" aria-label="PIN access gate">
     <div class="pinCard">
       <div class="pinBrandLine" aria-hidden="true">
         <span class="pinMark"></span><span class="pinMark2"></span>
         <span class="badge">EuroPolytech Academy</span>
       </div>
-
       <h2 class="pinTitle">Restricted Access</h2>
       <p class="pinSub">Enter the internal access PIN to continue.</p>
-
-      <input
-        id="pinInput"
-        type="password"
-        placeholder="Internal password"
-        autocomplete="current-password"
-      />
-
+      <input id="pinInput" type="password" placeholder="Internal password" autocomplete="current-password" />
       <div style="display:flex; gap:10px; margin-top:12px;">
         <button class="accent" onclick="checkPin()" style="width:100%;">Access</button>
       </div>
-
       <div id="pinError">Incorrect PIN. Please try again.</div>
-
       <div class="small muted" style="margin-top:12px;">
         Tip: use browser refresh if the page looks cached after updates.
       </div>
@@ -458,11 +417,7 @@
         <div class="subtitle">Lightweight operational dashboard · Google Sheets log · Manual Zoho updates</div>
       </div>
       <div class="hint" title="EuroPolytech Academy">
-        <img
-          src="https://www.europolytech.academy/EuroPolytech%20Logo%20jpeg.png"
-          alt="EuroPolytech Academy logo"
-          style="height:28px; width:auto; display:block;"
-        />
+        <img src="https://www.europolytech.academy/EuroPolytech%20Logo%20jpeg.png" alt="EuroPolytech Academy logo" style="height:28px; width:auto; display:block;" />
       </div>
     </div>
 
@@ -471,56 +426,33 @@
         <h2>Officer session</h2>
         <label>Officer name (typed)</label>
         <input id="officerName" placeholder="e.g., Amine / Sarah Smith" />
-        <div class="small muted" style="margin-top:8px;">
-          This name is written into the audit log for each action (lightweight compliance trail).
-        </div>
+        <div class="small muted" style="margin-top:8px;">Logged for each action (compliance trail).</div>
       </div>
 
-      <!-- Applicant Photo (big preview) -->
       <div class="card" style="flex:1; min-width: 260px;">
         <h2>Applicant</h2>
-
         <div class="photoWrap">
-          <!-- Important attributes to avoid Drive referrer-related blocking -->
           <img id="photoPreview" alt="Applicant photo" referrerpolicy="no-referrer" crossorigin="anonymous" />
           <div id="photoBadge" class="photoBadge">No student loaded</div>
         </div>
-
         <div class="small muted" id="photoMeta" style="margin-top:10px;"></div>
       </div>
 
       <div class="card" style="flex:2; min-width: 320px;">
         <h2>Create / load student</h2>
         <div class="split">
-          <div>
-            <label>Full name</label>
-            <input id="fullName" placeholder="Student full name" />
-          </div>
-          <div>
-            <label>Email (key identifier)</label>
-            <input id="email" placeholder="student@email.com" />
-          </div>
-          <div>
-            <label>Programme</label>
-            <input id="programme" placeholder="e.g., SkillCamp Business" />
-          </div>
-          <div>
-            <label>Intake</label>
-            <input id="intake" placeholder="e.g., Feb 2026" />
-          </div>
-          <div>
-            <label>Nationality</label>
-            <input id="nationality" placeholder="e.g., Pakistan" />
-          </div>
+          <div><label>Full name</label><input id="fullName" placeholder="Student full name" /></div>
+          <div><label>Email (key identifier)</label><input id="email" placeholder="student@email.com" /></div>
+          <div><label>Programme</label><input id="programme" placeholder="SkillCamp Business" /></div>
+          <div><label>Intake</label><input id="intake" placeholder="Feb 2026" /></div>
+          <div><label>Nationality</label><input id="nationality" placeholder="e.g., Pakistan" /></div>
           <div style="display:flex; align-items:end; gap:10px;">
             <button id="createLoadBtn" style="width:100%;">Create / Load</button>
             <button class="secondary" id="refreshListBtn" style="width:100%;">Refresh list</button>
           </div>
         </div>
-
         <div id="currentStudentMeta" class="small" style="margin-top:10px;"></div>
 
-        <!-- Applicant Photo Panel (upload) -->
         <div id="photoPanel" class="card" style="margin-top:12px; display:none;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
             <div style="display:flex; align-items:center; gap:12px;">
@@ -528,28 +460,19 @@
                 <img id="appPhotoImg" class="avatarImg" alt="Applicant photo" referrerpolicy="no-referrer" crossorigin="anonymous" />
                 <div id="appStatusBadge" class="avatarBadge">No status</div>
               </div>
-
               <div>
                 <div style="font-weight:900; letter-spacing:-0.02em;">Applicant photo</div>
-                <div class="small muted" id="photoMetaLine">Load a student to manage photo.</div>
+                <div class="small muted" id="photoMetaLine">Load student to manage photo.</div>
               </div>
             </div>
           </div>
-
           <div style="margin-top:12px;">
             <label>Upload / update photo</label>
             <input id="photoInput" type="file" accept="image/*" />
-
             <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <!-- IMPORTANT: type="button" prevents any accidental submit/reset -->
-              <button id="uploadPhotoBtn" type="button" class="accent" disabled style="flex:1 1 220px;">
-                Upload photo
-              </button>
-              <button id="clearPhotoSelectionBtn" type="button" class="secondary" disabled style="flex:1 1 220px;">
-                Clear selection
-              </button>
+              <button id="uploadPhotoBtn" type="button" class="accent" disabled style="flex:1 1 220px;">Upload photo</button>
+              <button id="clearPhotoSelectionBtn" type="button" class="secondary" disabled style="flex:1 1 220px;">Clear selection</button>
             </div>
-
             <div id="photoHint" class="small muted" style="margin-top:8px;"></div>
           </div>
         </div>
@@ -559,88 +482,47 @@
     <div class="row" style="margin-top:16px;">
       <div class="card" style="flex:1; min-width: 340px;">
         <h2>Guided process</h2>
-        <div class="small muted">Pick the next stage after completing checks and manual Zoho updates.</div>
-
         <label>Current stage</label>
         <div id="currentStage" class="pill neutral">No student loaded</div>
-
         <label style="margin-top:14px;">Move to next stage</label>
-        <select id="stageSelect" disabled>
-          <option value="">Select stage…</option>
-        </select>
-
-        <!-- Acceptance & Declarations (Zoho Prefill) -->
+        <select id="stageSelect" disabled><option value="">Select stage…</option></select>
         <div id="zohoBlock" style="margin-top:10px; display:none;">
-          <div class="small muted" style="margin-bottom:8px;">
-            Use this when the stage is <b>Eligible – Conditional</b>. This opens a pre-filled Zoho form for the loaded student.
-          </div>
-
           <div class="zohoBtnRow">
-            <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">
-              Open Acceptance & Declarations Form
-            </button>
-            <button id="copyZohoPrefillBtn" class="secondary" disabled style="width:100%;">
-              Copy link
-            </button>
+            <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">Open Zoho Form</button>
+            <button id="copyZohoPrefillBtn" class="secondary" disabled style="width:100%;">Copy link</button>
           </div>
-
           <div id="zohoPrefillHint" class="small muted" style="margin-top:8px;"></div>
         </div>
-
         <label>Details / note (will be logged)</label>
-        <textarea id="details" rows="3" placeholder="E.g., Checked passport + academic docs. Missing English certificate; requested via email."></textarea>
-
+        <textarea id="details" rows="3" placeholder="Checked docs, etc."></textarea>
         <div style="display:flex; gap:10px; margin-top:10px;">
           <button id="updateStageBtn" disabled style="width:100%;">Log update</button>
-          <button class="secondary" id="printCardBtn" disabled style="width:100%;">Print / Save as PDF</button>
+          <button class="secondary" id="printCardBtn" disabled style="width:100%;">Print / Save PDF</button>
         </div>
-
-        <div id="stageGuidance" class="card guidance" style="margin-top:14px;">
-          <b>Guidance will appear here.</b>
-          <div class="small muted">Load a student and select a stage.</div>
-        </div>
+        <div id="stageGuidance" class="card guidance" style="margin-top:14px;"><b>Guidance will appear here.</b></div>
       </div>
 
       <div class="card" style="flex:2; min-width: 340px;">
-        <h2>All students (from Google Sheet)</h2>
-        <div class="small muted">Your live operational dashboard.</div>
+        <h2>All students (Live Dashboard)</h2>
         <div style="overflow:auto; margin-top:10px;">
-          <table id="studentsTable" aria-label="Students list">
+          <table id="studentsTable">
             <thead>
-              <tr>
-                <th>StudentID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Programme</th>
-                <th>Stage</th>
-                <th>Updated</th>
-                <th>By</th>
-              </tr>
+              <tr><th>ID</th><th>Name</th><th>Email</th><th>Prog</th><th>Stage</th><th>Updated</th><th>By</th></tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
-
-        <div class="small muted" style="margin-top:10px;">
-          Tip: click an email address to load that student.
-        </div>
       </div>
     </div>
 
-    <!-- Print area -->
     <div id="printArea" class="card" style="margin-top:20px; display:none;">
       <h2 style="margin:0 0 8px 0;">Student Status Card</h2>
       <div class="small muted" id="printGenerated"></div>
       <div style="margin-top:10px;">
         <div><b>Student:</b> <span id="pName"></span></div>
-        <div><b>StudentID:</b> <span id="pId"></span></div>
+        <div><b>ID:</b> <span id="pId"></span></div>
         <div><b>Email:</b> <span id="pEmail"></span></div>
-        <div><b>Programme:</b> <span id="pProgramme"></span></div>
-        <div><b>Intake:</b> <span id="pIntake"></span></div>
-        <div><b>Nationality:</b> <span id="pNationality"></span></div>
-        <div style="margin-top:8px;"><b>Current Stage:</b> <span class="pill" id="pStage"></span></div>
-        <div style="margin-top:8px;"><b>Last Updated:</b> <span id="pUpdated"></span> <span class="muted">by</span> <span id="pBy"></span></div>
-        <div style="margin-top:10px;"><b>Last Action:</b> <span id="pAction"></span></div>
+        <div><b>Stage:</b> <span class="pill" id="pStage"></span></div>
       </div>
     </div>
   </div>
@@ -649,28 +531,31 @@
   // ====== CONFIG ======
   const API_URL = "https://script.google.com/macros/s/AKfycbx1_ka9lsMrAJFZ9Pu3MsZgO9sHTRKSSrFoJ_le22Z5mh1wCsj38G8G4GzEtssdOH-hvQ/exec";
   const ACCESS_PIN = "Europolytech25.";
+  const ZOHO_FORM_BASE_URL = "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
 
-  // ===== Zoho Prefill Form (Acceptance & Declarations) =====
-  const ZOHO_FORM_BASE_URL =
-    "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
+  let currentStudent = null;
+  let selectedPhotoDataUrl = "";
 
-  function buildZohoPrefillUrl(stu) {
-    if (!stu) return "";
-    const params = new URLSearchParams({
-      StudentID: stu.StudentID || "",
-      FullName: stu.FullName || "",
-      Email: stu.Email || "",
-      Programme: stu.Programme || "",
-      Intake: stu.Intake || "",
-      Nationality: stu.Nationality || ""
-    });
-    return `${ZOHO_FORM_BASE_URL}?${params.toString()}`;
+  // ====== API HELPER ======
+  async function api(action, payload) {
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action, ...payload })
+      });
+      const text = await res.text();
+      const json = JSON.parse(text);
+      if (!json.ok) throw new Error(json.error || "API error");
+      return json.data;
+    } catch (err) {
+      console.error(err);
+      throw new Error("Connection failed: " + err.message);
+    }
   }
 
-  // ===== PIN =====
+  // ====== PIN LOGIC ======
   function checkPin() {
-    const entered = (document.getElementById("pinInput").value || "").trim();
-    if (entered === ACCESS_PIN) {
+    if ((document.getElementById("pinInput").value || "").trim() === ACCESS_PIN) {
       document.getElementById("pinGate").style.display = "none";
       sessionStorage.setItem("ep_pin_ok", "1");
     } else {
@@ -678,465 +563,173 @@
     }
   }
 
-  document.addEventListener("keydown", (e) => {
-    const gate = document.getElementById("pinGate");
-    const gateVisible = gate && gate.style.display !== "none";
-    if (gateVisible && e.key === "Enter") checkPin();
-  });
-
   window.addEventListener("load", () => {
-    if (sessionStorage.getItem("ep_pin_ok") === "1") {
-      const gate = document.getElementById("pinGate");
-      if (gate) gate.style.display = "none";
-    }
+    if (sessionStorage.getItem("ep_pin_ok") === "1") document.getElementById("pinGate").style.display = "none";
   });
 
-  // ====== Stages ======
-  const STAGES = [
-    { key: "Application Submitted", guide: `Check completeness. If missing docs, request them. Zoho: keep status 'Application Submitted' until complete.` },
-    { key: "Under Review", guide: `Review eligibility (academic + English + short-stay fit). Zoho: add internal note with checks performed.` },
-    { key: "Eligible – Conditional", guide: `Decision: eligible. Zoho: update status to 'Eligible – Conditional'. Prepare Conditional LoA.` },
-    { key: "Conditional LoA Issued", guide: `Send Conditional LoA manually. Zoho: attach LoA PDF + set status 'Conditional LoA Issued'.` },
-    { key: "Accepted by Applicant", guide: `Confirm acceptance received (email/form). Zoho: upload evidence + set status 'Accepted by Applicant'.` },
-    { key: "Declarations Signed", guide: `Collect signed declarations (no-work, short-stay, refund policy). Zoho: upload + tick compliance + set status 'Declarations Signed'.` },
-    { key: "Fees Paid", guide: `Verify payment received + receipt issued. Zoho: set Payment Status 'Paid' + set status 'Fees Paid'.` },
-    { key: "Final Enrolment Confirmed", guide: `Issue final enrolment confirmation manually (visa/border usable). Zoho: attach + set status 'Final Enrolment Confirmed'.` },
-    { key: "Enrolled / Arrived", guide: `Confirm arrival, collect entry stamp if relevant, start attendance tracking. Zoho: set status 'Enrolled / Arrived'.` },
-    { key: "Completed", guide: `Programme completed. Zoho: set status 'Completed' + archive documents as per policy.` },
-    { key: "Rejected", guide: `Not eligible. Zoho: set status 'Rejected' + record reason clearly.` },
-    { key: "Withdrawn", guide: `Applicant withdrew. Zoho: set status 'Withdrawn' + record reason if known.` },
-  ];
-
-  // ====== API helper ======
-  async function api(action, payload) {
-    let res;
-    try {
-      res = await fetch(API_URL, {
-        method: "POST",
-        // IMPORTANT: no Content-Type header (avoids CORS preflight)
-        body: JSON.stringify({ action, ...payload })
-      });
-    } catch (err) {
-      throw new Error("Failed to reach the API. Check Apps Script deployment access and URL.");
-    }
-
-    const text = await res.text();
-    let json;
-    try {
-      json = JSON.parse(text);
-    } catch {
-      throw new Error("API did not return JSON. First 200 chars: " + text.slice(0, 200));
-    }
-    if (!json.ok) throw new Error(json.error || "API error");
-    return json.data;
-  }
-
-  // ====== State ======
-  let currentStudent = null;
-
-  function officer() {
-    return (document.getElementById("officerName").value || "").trim();
-  }
-
-  // ===== Zoho wiring =====
-  const openZohoBtn = document.getElementById("openZohoPrefillBtn");
-  const copyZohoBtn = document.getElementById("copyZohoPrefillBtn");
-  const zohoHint = document.getElementById("zohoPrefillHint");
-
-  function updateZohoButtons() {
-    const hasStudent = !!(currentStudent && currentStudent.Email);
-    const stage = String((currentStudent && currentStudent.CurrentStage) || "");
-    const eligibleConditional =
-      stage === "Eligible – Conditional" || stage === "Eligible - Conditional";
-
-    const zohoBlock = document.getElementById("zohoBlock");
-    if (zohoBlock) zohoBlock.style.display = (hasStudent && eligibleConditional) ? "block" : "none";
-
-    const enable = hasStudent && eligibleConditional;
-    if (openZohoBtn) openZohoBtn.disabled = !enable;
-    if (copyZohoBtn) copyZohoBtn.disabled = !enable;
-
-    if (zohoHint) {
-      zohoHint.textContent = enable
-        ? "Ready: click Open to launch the pre-filled form, or Copy link to paste into the eligibility email."
-        : "";
-    }
-  }
-
-  if (openZohoBtn) {
-    openZohoBtn.addEventListener("click", () => {
-      if (!currentStudent) return alert("Load a student first.");
-      const url = buildZohoPrefillUrl(currentStudent);
-      window.open(url, "_blank", "noopener,noreferrer");
-    });
-  }
-
-  if (copyZohoBtn) {
-    copyZohoBtn.addEventListener("click", async () => {
-      if (!currentStudent) return alert("Load a student first.");
-      const url = buildZohoPrefillUrl(currentStudent);
-      try {
-        await navigator.clipboard.writeText(url);
-        if (zohoHint) zohoHint.textContent = "Copied ✔ Now paste it into the eligibility email.";
-      } catch {
-        prompt("Copy this link:", url);
-      }
-    });
-  }
-
-  // ===== Photo UI helpers =====
-  const photoPanel = document.getElementById("photoPanel");
-  const photoInput = document.getElementById("photoInput");
-  const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
-  const clearPhotoSelectionBtn = document.getElementById("clearPhotoSelectionBtn");
-  const appPhotoImg = document.getElementById("appPhotoImg");
-  const appStatusBadge = document.getElementById("appStatusBadge");
-  const photoHint = document.getElementById("photoHint");
-  const photoMetaLine = document.getElementById("photoMetaLine");
-
-  const bigImg = document.getElementById("photoPreview");
-  const bigBadge = document.getElementById("photoBadge");
-  const bigMeta = document.getElementById("photoMeta");
-
-  let selectedPhotoDataUrl = "";
-
-  function setHint(msg){
-    if (photoHint) photoHint.textContent = msg || "";
-  }
-
-  function initialsFromName(name) {
-    const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-    const a = parts[0] ? parts[0][0] : "E";
-    const b = parts[1] ? parts[1][0] : "P";
-    return (a + b).toUpperCase();
-  }
-
-  function makeInitialsAvatarDataUrl(initials) {
-    const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
-      <defs>
-        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stop-color="rgba(35,79,235,0.25)"/>
-          <stop offset="100%" stop-color="rgba(255,210,42,0.25)"/>
-        </linearGradient>
-      </defs>
-      <rect width="100%" height="100%" rx="24" fill="url(#g)"/>
-      <text x="50%" y="54%" font-size="46" font-family="Arial" font-weight="800"
-            fill="#0f172a" text-anchor="middle" dominant-baseline="middle">${initials}</text>
-    </svg>`;
-    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-  }
-
-  // Drive URLs sometimes fail inside embedded contexts due to referrer/caching.
-  // This loader:
-  // - uses PhotoURL if present,
-  // - adds a cache-buster,
-  // - applies referrerpolicy/no-referrer (already in HTML),
-  // - falls back to Drive thumbnail URL using PhotoFileId.
-  function resolvePhotoSrc(stu){
+  // ====== PHOTO HELPERS ======
+  function resolvePhotoSrc(stu) {
     if (!stu) return "";
     const url = String(stu.PhotoURL || "").trim();
     const fileId = String(stu.PhotoFileId || "").trim();
-
-    if (url) {
-      return url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
-    }
-    if (fileId) {
-      const thumb = `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w800`;
-      return thumb + "&v=" + Date.now();
-    }
+    // Cache buster is vital to prevent browser showing old/broken versions
+    if (url) return url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+    if (fileId) return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800&v=${Date.now()}`;
     return "";
   }
 
-  function setBigPhoto(stu){
-    if (bigBadge) bigBadge.textContent = (stu && stu.CurrentStage) ? stu.CurrentStage : "No student loaded";
-
-    if (!bigImg) return;
-
-    const src = resolvePhotoSrc(stu);
-    if (!src) {
-      bigImg.removeAttribute("src");
-      bigImg.style.display = "none";
-      if (bigMeta) bigMeta.textContent = "No photo uploaded yet.";
-      return;
-    }
-
-    bigImg.onload = () => { bigImg.style.display = "block"; };
-    bigImg.onerror = () => {
-      bigImg.style.display = "none";
-      if (bigMeta) bigMeta.textContent = "Photo link exists, but the browser blocked it. Try Chrome/Edge, or we’ll switch to proxy mode.";
-    };
-    bigImg.src = src;
-
-    if (bigMeta) bigMeta.textContent = "Photo is saved in Drive and linked to the student record.";
-  }
-
   function renderPhotoPanel(stu) {
-    if (!photoPanel) return;
-
-    if (!stu || !stu.Email) {
-      photoPanel.style.display = "none";
-      return;
-    }
+    const photoPanel = document.getElementById("photoPanel");
+    if (!stu || !stu.Email) { photoPanel.style.display = "none"; return; }
     photoPanel.style.display = "block";
 
-    const stage = String(stu.CurrentStage || "No status");
-    if (appStatusBadge) appStatusBadge.textContent = stage;
-
-    // Small avatar: show stored photo, else local preview, else initials
     const storedSrc = resolvePhotoSrc(stu);
+    const appPhotoImg = document.getElementById("appPhotoImg");
+    
     if (storedSrc) {
       appPhotoImg.src = storedSrc;
     } else if (selectedPhotoDataUrl) {
       appPhotoImg.src = selectedPhotoDataUrl;
     } else {
-      appPhotoImg.src = makeInitialsAvatarDataUrl(initialsFromName(stu.FullName));
+      appPhotoImg.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif">No Photo</text></svg>');
     }
 
-    if (photoMetaLine) {
-      photoMetaLine.textContent = `StudentID: ${stu.StudentID || "—"} · Email: ${stu.Email || "—"}`;
-    }
-
-    const canUpload = !!selectedPhotoDataUrl;
-    if (uploadPhotoBtn) uploadPhotoBtn.disabled = !canUpload;
-    if (clearPhotoSelectionBtn) clearPhotoSelectionBtn.disabled = !canUpload;
-
-    const hasStored = !!(String(stu.PhotoURL || "").trim() || String(stu.PhotoFileId || "").trim());
-    setHint(
-      hasStored
-        ? "Current photo is saved. You can upload a new one anytime."
-        : "No photo saved yet. Choose an image and click Upload."
-    );
+    document.getElementById("uploadPhotoBtn").disabled = !selectedPhotoDataUrl;
+    document.getElementById("clearPhotoSelectionBtn").disabled = !selectedPhotoDataUrl;
   }
 
-  // ===== Photo input events =====
-  if (photoInput) {
-    photoInput.addEventListener("change", () => {
-      const file = photoInput.files && photoInput.files[0];
-      if (!file) return;
-
-      if (!file.type.startsWith("image/")) {
-        alert("Please select an image file.");
-        photoInput.value = "";
-        return;
-      }
-      if (file.size > 3 * 1024 * 1024) {
-        alert("Please use a smaller image (max ~3MB).");
-        photoInput.value = "";
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        selectedPhotoDataUrl = String(reader.result || "");
-        renderPhotoPanel(currentStudent);
-        setHint("Preview ready ✔ Click Upload photo to save it to Drive.");
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (clearPhotoSelectionBtn) {
-    clearPhotoSelectionBtn.addEventListener("click", () => {
-      selectedPhotoDataUrl = "";
-      if (photoInput) photoInput.value = "";
+  // ====== PHOTO UPLOAD EVENT ======
+  document.getElementById("photoInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) return alert("File too large (Max 4MB)");
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      selectedPhotoDataUrl = reader.result;
       renderPhotoPanel(currentStudent);
-    });
-  }
-
-  if (uploadPhotoBtn) {
-    uploadPhotoBtn.addEventListener("click", async () => {
-      const off = officer();
-      if (!off) return alert("Please type the officer name first.");
-      if (!currentStudent || !currentStudent.Email) return alert("Load a student first.");
-      if (!selectedPhotoDataUrl) return alert("Choose a photo first.");
-
-      uploadPhotoBtn.disabled = true;
-      setHint("Uploading photo…");
-
-      try {
-        await api("uploadPhoto", {
-          token: ACCESS_PIN,
-          email: currentStudent.Email,
-          studentId: currentStudent.StudentID,
-          officer: off,
-          dataUrl: selectedPhotoDataUrl
-        });
-
-        // Reload the student from sheet (pull PhotoURL + PhotoFileId)
-        const stu = await api("getStudentByEmail", { email: currentStudent.Email });
-
-        // Clear local selection
-        selectedPhotoDataUrl = "";
-        if (photoInput) photoInput.value = "";
-
-        // Update UI and list
-        setStudentUI(stu);
-        await refreshList();
-
-        setHint("Uploaded ✔ Photo is now stored in Drive and linked to the student record.");
-      } catch (e) {
-        alert(e.message);
-        setHint("Upload failed. Please try again.");
-      } finally {
-        // Re-render based on currentStudent
-        renderPhotoPanel(currentStudent);
-      }
-    });
-  }
-
-  // ===== Populate stages =====
-  const stageSelect = document.getElementById("stageSelect");
-  STAGES.forEach(s => {
-    const opt = document.createElement("option");
-    opt.value = s.key;
-    opt.textContent = s.key;
-    stageSelect.appendChild(opt);
+    };
+    reader.readAsDataURL(file);
   });
 
-  stageSelect.addEventListener("change", () => {
-    const s = STAGES.find(x => x.key === stageSelect.value);
-    document.getElementById("stageGuidance").innerHTML =
-      `<b>${s ? s.key : "Guidance"}</b><div class="small muted" style="margin-top:6px;">${s ? s.guide : ""}</div>`;
+  document.getElementById("uploadPhotoBtn").addEventListener("click", async () => {
+    const off = (document.getElementById("officerName").value || "").trim();
+    if (!off) return alert("Enter officer name.");
+    
+    const btn = document.getElementById("uploadPhotoBtn");
+    btn.disabled = true;
+    document.getElementById("photoHint").textContent = "Uploading to Drive...";
+
+    try {
+      const result = await api("uploadPhoto", {
+        token: ACCESS_PIN,
+        email: currentStudent.Email,
+        studentId: currentStudent.StudentID,
+        officer: off,
+        dataUrl: selectedPhotoDataUrl
+      });
+
+      // Crucial: Update state with returned data to avoid stale fetch
+      currentStudent = result.student;
+      selectedPhotoDataUrl = "";
+      document.getElementById("photoInput").value = "";
+      
+      setStudentUI(currentStudent);
+      await refreshList();
+      document.getElementById("photoHint").textContent = "Upload successful!";
+    } catch (e) {
+      alert(e.message);
+      document.getElementById("photoHint").textContent = "Upload failed.";
+    } finally {
+      btn.disabled = false;
+    }
   });
 
-  // ===== UI setter =====
+  document.getElementById("clearPhotoSelectionBtn").addEventListener("click", () => {
+    selectedPhotoDataUrl = "";
+    document.getElementById("photoInput").value = "";
+    renderPhotoPanel(currentStudent);
+  });
+
+  // ====== CORE UI LOGIC ======
   function setStudentUI(stu) {
     currentStudent = stu;
-
-    const currentStageEl = document.getElementById("currentStage");
-    if (stu && stu.CurrentStage) {
-      currentStageEl.textContent = stu.CurrentStage;
-      currentStageEl.classList.remove("neutral");
-    } else {
-      currentStageEl.textContent = "No student loaded";
-      currentStageEl.classList.add("neutral");
+    const stageEl = document.getElementById("currentStage");
+    
+    if (stu) {
+      stageEl.textContent = stu.CurrentStage;
+      stageEl.classList.remove("neutral");
+      document.getElementById("currentStudentMeta").textContent = `ID: ${stu.StudentID} | ${stu.Email}`;
+      
+      // Update Big Preview
+      const bigImg = document.getElementById("photoPreview");
+      const src = resolvePhotoSrc(stu);
+      if (src) {
+        bigImg.src = src;
+        bigImg.style.display = "block";
+      } else {
+        bigImg.style.display = "none";
+      }
+      document.getElementById("photoBadge").textContent = stu.CurrentStage;
     }
 
-    document.getElementById("currentStudentMeta").textContent = stu
-      ? `Loaded: ${stu.FullName || "—"} (${stu.Email}) · ID: ${stu.StudentID} · Updated: ${stu.LastUpdatedAt || "—"} by ${stu.LastUpdatedBy || "—"}`
-      : "";
-
-    stageSelect.disabled = !stu;
+    document.getElementById("stageSelect").disabled = !stu;
     document.getElementById("updateStageBtn").disabled = !stu;
     document.getElementById("printCardBtn").disabled = !stu;
-
-    if (stu) {
-      stageSelect.value = "";
-      document.getElementById("stageGuidance").innerHTML =
-        `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update when done.</div>`;
-    }
-
-    // Big preview + badge
-    setBigPhoto(stu);
-
-    updateZohoButtons();
+    
     renderPhotoPanel(stu);
+    updateZohoUI();
   }
 
-  // ===== Students list =====
   async function refreshList() {
     const list = await api("listStudents", {});
     const tbody = document.querySelector("#studentsTable tbody");
     tbody.innerHTML = "";
     list.forEach(s => {
       const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${s.StudentID || ""}</td>
-        <td>${s.FullName || ""}</td>
-        <td><a href="#" data-email="${s.Email}">${s.Email || ""}</a></td>
-        <td>${s.Programme || ""}</td>
-        <td><span class="pill">${s.CurrentStage || ""}</span></td>
-        <td>${s.LastUpdatedAt || ""}</td>
-        <td>${s.LastUpdatedBy || ""}</td>
-      `;
+      tr.innerHTML = `<td>${s.StudentID}</td><td>${s.FullName}</td><td><a href="#" class="load-stu" data-email="${s.Email}">${s.Email}</a></td><td>${s.Programme}</td><td><span class="pill">${s.CurrentStage}</span></td><td>${s.LastUpdatedAt.split('T')[0]}</td><td>${s.LastUpdatedBy}</td>`;
       tbody.appendChild(tr);
-    });
-
-    tbody.querySelectorAll("a[data-email]").forEach(a => {
-      a.addEventListener("click", async (ev) => {
-        ev.preventDefault();
-        const email = a.getAttribute("data-email");
-        const stu = await api("getStudentByEmail", { email });
-        setStudentUI(stu);
-      });
     });
   }
 
-  // ===== Create / Load =====
-  document.getElementById("createLoadBtn").addEventListener("click", async () => {
-    const off = officer();
-    if (!off) return alert("Please type the officer name first.");
+  document.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("load-stu")) {
+      e.preventDefault();
+      const stu = await api("getStudentByEmail", { email: e.target.dataset.email });
+      setStudentUI(stu);
+    }
+  });
 
+  document.getElementById("createLoadBtn").addEventListener("click", async () => {
     const payload = {
-      officer: off,
+      officer: document.getElementById("officerName").value,
       fullName: document.getElementById("fullName").value,
       email: document.getElementById("email").value,
       programme: document.getElementById("programme").value,
       intake: document.getElementById("intake").value,
       nationality: document.getElementById("nationality").value,
     };
-
-    try {
-      const stu = await api("createOrLoadStudent", payload);
-      setStudentUI(stu);
-      await refreshList();
-    } catch (e) {
-      alert(e.message);
-    }
-  });
-
-  document.getElementById("refreshListBtn").addEventListener("click", async () => {
-    try { await refreshList(); } catch(e){ alert(e.message); }
-  });
-
-  // ===== Log stage update =====
-  document.getElementById("updateStageBtn").addEventListener("click", async () => {
-    const off = officer();
-    if (!off) return alert("Please type the officer name first.");
-    if (!currentStudent) return alert("Load a student first.");
-    const newStage = stageSelect.value;
-    if (!newStage) return alert("Select a stage.");
-    const details = document.getElementById("details").value;
-
-    try {
-      const stu = await api("updateStage", { email: currentStudent.Email, officer: off, newStage, details });
-      setStudentUI(stu);
-      document.getElementById("details").value = "";
-      await refreshList();
-      alert("Logged. Reminder: now go to Zoho CRM and update the record manually as per guidance.");
-    } catch (e) {
-      alert(e.message);
-    }
-  });
-
-  // ===== Print =====
-  document.getElementById("printCardBtn").addEventListener("click", () => {
-    if (!currentStudent) return;
-
-    document.getElementById("pName").textContent = currentStudent.FullName || "";
-    document.getElementById("pId").textContent = currentStudent.StudentID || "";
-    document.getElementById("pEmail").textContent = currentStudent.Email || "";
-    document.getElementById("pProgramme").textContent = currentStudent.Programme || "";
-    document.getElementById("pIntake").textContent = currentStudent.Intake || "";
-    document.getElementById("pNationality").textContent = currentStudent.Nationality || "";
-    document.getElementById("pStage").textContent = currentStudent.CurrentStage || "";
-    document.getElementById("pUpdated").textContent = currentStudent.LastUpdatedAt || "";
-    document.getElementById("pBy").textContent = currentStudent.LastUpdatedBy || "";
-    document.getElementById("pAction").textContent = currentStudent.LastAction || "";
-
-    document.getElementById("printGenerated").textContent =
-      `Generated: ${new Date().toLocaleString()} · Officer session: ${officer() || "—"}`;
-
-    document.getElementById("printArea").style.display = "block";
-    window.print();
-    document.getElementById("printArea").style.display = "none";
-  });
-
-  // ===== Initial load =====
-  (async () => {
+    const stu = await api("createOrLoadStudent", payload);
+    setStudentUI(stu);
     await refreshList();
-  })();
+  });
+
+  // Zoho UI visibility
+  function updateZohoUI() {
+    const block = document.getElementById("zohoBlock");
+    const isEligible = currentStudent && (currentStudent.CurrentStage || "").includes("Eligible");
+    block.style.display = isEligible ? "block" : "none";
+    document.getElementById("openZohoPrefillBtn").disabled = !isEligible;
+    document.getElementById("copyZohoPrefillBtn").disabled = !isEligible;
+  }
+
+  // Initial Load
+  refreshList();
+
+  const STAGES = ["Application Submitted", "Under Review", "Eligible – Conditional", "Conditional LoA Issued", "Accepted by Applicant", "Declarations Signed", "Fees Paid", "Final Enrolment Confirmed", "Enrolled / Arrived", "Completed", "Rejected", "Withdrawn"];
+  const ss = document.getElementById("stageSelect");
+  STAGES.forEach(st => { const o = document.createElement("option"); o.value = st; o.textContent = st; ss.appendChild(o); });
+
 </script>
 </body>
 </html>
