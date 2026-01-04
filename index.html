@@ -222,7 +222,43 @@
       flex: 1 1 220px;
       min-width: 220px;
     }
+/* Applicant photo card */
+.photoWrap{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(15,23,42,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
+#photoPreview{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none; /* show only when loaded */
+}
+
+.photoBadge{
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  border: 1px solid rgba(15,23,42,.12);
+  background: rgba(255,255,255,.92);
+  color: rgba(15,23,42,.88);
+  max-width: calc(100% - 20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
     /* Applicant photo panel */
     .avatarWrap{
       width: 64px;
@@ -442,7 +478,17 @@
           This name is written into the audit log for each action (lightweight compliance trail).
         </div>
       </div>
+<!-- Applicant Photo (preview) -->
+<div class="card" style="flex:1; min-width: 260px;">
+  <h2>Applicant</h2>
 
+  <div class="photoWrap">
+    <img id="photoPreview" alt="Applicant photo" />
+    <div id="photoBadge" class="photoBadge">No student loaded</div>
+  </div>
+
+  <div class="small muted" id="photoMeta" style="margin-top:10px;"></div>
+</div>
       <div class="card" style="flex:2; min-width: 320px;">
         <h2>Create / load student</h2>
         <div class="split">
@@ -927,7 +973,31 @@
       document.getElementById("stageGuidance").innerHTML =
         `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update when done.</div>`;
     }
+// ===== Photo preview + badge =====
+const img = document.getElementById("photoPreview");
+const badge = document.getElementById("photoBadge");
+const meta = document.getElementById("photoMeta");
 
+if (badge) badge.textContent = (stu && stu.CurrentStage) ? stu.CurrentStage : "No student loaded";
+
+if (meta) {
+  meta.textContent = (stu && stu.PhotoURL)
+    ? "Photo is saved in Drive (linked in Students sheet)."
+    : "No photo uploaded yet.";
+}
+
+if (img) {
+  const src = (stu && stu.PhotoURL) ? String(stu.PhotoURL).trim() : "";
+  if (!src) {
+    img.removeAttribute("src");
+    img.style.display = "none";
+  } else {
+    // cache-buster fixes “broken image” caused by browser caching old response
+    img.onload = () => { img.style.display = "block"; };
+    img.onerror = () => { img.style.display = "none"; };
+    img.src = src + (src.includes("?") ? "&" : "?") + "v=" + Date.now();
+  }
+}
     updateZohoButtons();
     renderPhotoPanel(stu);
   }
@@ -1035,3 +1105,4 @@
 </script>
 </body>
 </html>
+
