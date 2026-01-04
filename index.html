@@ -920,7 +920,32 @@
 
   async function api(action, payload) {
     let res;
+async function loadApplicantPhoto(stu) {
+  const img = document.getElementById("photoPreview");
+  if (!img) return;
 
+  // If no photo stored, hide
+  if (!stu || !stu.PhotoFileId) {
+    img.src = "";
+    img.style.display = "none";
+    return;
+  }
+
+  try {
+    // Ask Apps Script for base64 image (no public Drive link required)
+    const res = await api("getPhotoBase64", {
+      token: ACCESS_PIN,   // same token you already use
+      fileId: stu.PhotoFileId
+    });
+
+    img.src = res.dataUrl;
+    img.style.display = "block";
+  } catch (e) {
+    console.log("Photo load failed:", e.message);
+    img.src = "";
+    img.style.display = "none";
+  }
+}
     try {
       res = await fetch(API_URL, {
         method: "POST",
@@ -998,6 +1023,7 @@ if (img) {
     img.src = src + (src.includes("?") ? "&" : "?") + "v=" + Date.now();
   }
 }
+    loadApplicantPhoto(stu);
     updateZohoButtons();
     renderPhotoPanel(stu);
   }
@@ -1105,4 +1131,5 @@ if (img) {
 </script>
 </body>
 </html>
+
 
