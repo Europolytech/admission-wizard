@@ -95,11 +95,6 @@
       color: var(--muted);
       font-size: 12px;
     }
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(255,210,42,.25);
-    }
 
     /* Layout */
     .row{
@@ -222,44 +217,46 @@
       flex: 1 1 220px;
       min-width: 220px;
     }
-/* Applicant photo card */
-.photoWrap{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid rgba(15,23,42,.10);
-  background: rgba(15,23,42,.04);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
 
-#photoPreview{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: none; /* show only when loaded */
-}
+    /* Applicant big preview card */
+    .photoWrap{
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(15,23,42,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-.photoBadge{
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 900;
-  border: 1px solid rgba(15,23,42,.12);
-  background: rgba(255,255,255,.92);
-  color: rgba(15,23,42,.88);
-  max-width: calc(100% - 20px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-    /* Applicant photo panel */
+    #photoPreview{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none; /* show only when loaded */
+    }
+
+    .photoBadge{
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.92);
+      color: rgba(15,23,42,.88);
+      max-width: calc(100% - 20px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Applicant small avatar in upload panel */
     .avatarWrap{
       width: 64px;
       height: 64px;
@@ -478,17 +475,20 @@
           This name is written into the audit log for each action (lightweight compliance trail).
         </div>
       </div>
-<!-- Applicant Photo (preview) -->
-<div class="card" style="flex:1; min-width: 260px;">
-  <h2>Applicant</h2>
 
-  <div class="photoWrap">
-    <img id="photoPreview" alt="Applicant photo" />
-    <div id="photoBadge" class="photoBadge">No student loaded</div>
-  </div>
+      <!-- Applicant Photo (big preview) -->
+      <div class="card" style="flex:1; min-width: 260px;">
+        <h2>Applicant</h2>
 
-  <div class="small muted" id="photoMeta" style="margin-top:10px;"></div>
-</div>
+        <div class="photoWrap">
+          <!-- Important attributes to avoid Drive referrer-related blocking -->
+          <img id="photoPreview" alt="Applicant photo" referrerpolicy="no-referrer" crossorigin="anonymous" />
+          <div id="photoBadge" class="photoBadge">No student loaded</div>
+        </div>
+
+        <div class="small muted" id="photoMeta" style="margin-top:10px;"></div>
+      </div>
+
       <div class="card" style="flex:2; min-width: 320px;">
         <h2>Create / load student</h2>
         <div class="split">
@@ -520,12 +520,12 @@
 
         <div id="currentStudentMeta" class="small" style="margin-top:10px;"></div>
 
-        <!-- Applicant Photo Panel -->
+        <!-- Applicant Photo Panel (upload) -->
         <div id="photoPanel" class="card" style="margin-top:12px; display:none;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
             <div style="display:flex; align-items:center; gap:12px;">
               <div class="avatarWrap">
-                <img id="appPhotoImg" class="avatarImg" alt="Applicant photo" />
+                <img id="appPhotoImg" class="avatarImg" alt="Applicant photo" referrerpolicy="no-referrer" crossorigin="anonymous" />
                 <div id="appStatusBadge" class="avatarBadge">No status</div>
               </div>
 
@@ -541,10 +541,11 @@
             <input id="photoInput" type="file" accept="image/*" />
 
             <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <button id="uploadPhotoBtn" class="accent" disabled style="flex:1 1 220px;">
+              <!-- IMPORTANT: type="button" prevents any accidental submit/reset -->
+              <button id="uploadPhotoBtn" type="button" class="accent" disabled style="flex:1 1 220px;">
                 Upload photo
               </button>
-              <button id="clearPhotoSelectionBtn" class="secondary" disabled style="flex:1 1 220px;">
+              <button id="clearPhotoSelectionBtn" type="button" class="secondary" disabled style="flex:1 1 220px;">
                 Clear selection
               </button>
             </div>
@@ -645,20 +646,16 @@
   </div>
 
 <script>
-  // ====== CONFIG: paste your Apps Script Web App URL here ======
+  // ====== CONFIG ======
   const API_URL = "https://script.google.com/macros/s/AKfycbx1_ka9lsMrAJFZ9Pu3MsZgO9sHTRKSSrFoJ_le22Z5mh1wCsj38G8G4GzEtssdOH-hvQ/exec";
-
-  // ===== PIN CONFIG =====
   const ACCESS_PIN = "Europolytech25.";
 
   // ===== Zoho Prefill Form (Acceptance & Declarations) =====
   const ZOHO_FORM_BASE_URL =
     "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
 
-  // Build a prefilled Zoho Forms URL from the currently loaded student
   function buildZohoPrefillUrl(stu) {
     if (!stu) return "";
-
     const params = new URLSearchParams({
       StudentID: stu.StudentID || "",
       FullName: stu.FullName || "",
@@ -667,10 +664,10 @@
       Intake: stu.Intake || "",
       Nationality: stu.Nationality || ""
     });
-
     return `${ZOHO_FORM_BASE_URL}?${params.toString()}`;
   }
 
+  // ===== PIN =====
   function checkPin() {
     const entered = (document.getElementById("pinInput").value || "").trim();
     if (entered === ACCESS_PIN) {
@@ -681,16 +678,16 @@
     }
   }
 
-  // Enter key support on PIN screen
   document.addEventListener("keydown", (e) => {
-    const gateVisible = document.getElementById("pinGate") && document.getElementById("pinGate").style.display !== "none";
+    const gate = document.getElementById("pinGate");
+    const gateVisible = gate && gate.style.display !== "none";
     if (gateVisible && e.key === "Enter") checkPin();
   });
 
-  // Keep unlocked during session
   window.addEventListener("load", () => {
     if (sessionStorage.getItem("ep_pin_ok") === "1") {
-      document.getElementById("pinGate").style.display = "none";
+      const gate = document.getElementById("pinGate");
+      if (gate) gate.style.display = "none";
     }
   });
 
@@ -710,18 +707,44 @@
     { key: "Withdrawn", guide: `Applicant withdrew. Zoho: set status 'Withdrawn' + record reason if known.` },
   ];
 
+  // ====== API helper ======
+  async function api(action, payload) {
+    let res;
+    try {
+      res = await fetch(API_URL, {
+        method: "POST",
+        // IMPORTANT: no Content-Type header (avoids CORS preflight)
+        body: JSON.stringify({ action, ...payload })
+      });
+    } catch (err) {
+      throw new Error("Failed to reach the API. Check Apps Script deployment access and URL.");
+    }
+
+    const text = await res.text();
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      throw new Error("API did not return JSON. First 200 chars: " + text.slice(0, 200));
+    }
+    if (!json.ok) throw new Error(json.error || "API error");
+    return json.data;
+  }
+
   // ====== State ======
   let currentStudent = null;
 
-  // ===== Zoho Prefill Buttons wiring =====
+  function officer() {
+    return (document.getElementById("officerName").value || "").trim();
+  }
+
+  // ===== Zoho wiring =====
   const openZohoBtn = document.getElementById("openZohoPrefillBtn");
   const copyZohoBtn = document.getElementById("copyZohoPrefillBtn");
   const zohoHint = document.getElementById("zohoPrefillHint");
 
   function updateZohoButtons() {
     const hasStudent = !!(currentStudent && currentStudent.Email);
-
-    // Stage rule: show only when Eligible – Conditional (support both dash types)
     const stage = String((currentStudent && currentStudent.CurrentStage) || "");
     const eligibleConditional =
       stage === "Eligible – Conditional" || stage === "Eligible - Conditional";
@@ -752,7 +775,6 @@
     copyZohoBtn.addEventListener("click", async () => {
       if (!currentStudent) return alert("Load a student first.");
       const url = buildZohoPrefillUrl(currentStudent);
-
       try {
         await navigator.clipboard.writeText(url);
         if (zohoHint) zohoHint.textContent = "Copied ✔ Now paste it into the eligibility email.";
@@ -762,7 +784,7 @@
     });
   }
 
-  // ===== Photo Upload wiring =====
+  // ===== Photo UI helpers =====
   const photoPanel = document.getElementById("photoPanel");
   const photoInput = document.getElementById("photoInput");
   const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
@@ -772,7 +794,15 @@
   const photoHint = document.getElementById("photoHint");
   const photoMetaLine = document.getElementById("photoMetaLine");
 
+  const bigImg = document.getElementById("photoPreview");
+  const bigBadge = document.getElementById("photoBadge");
+  const bigMeta = document.getElementById("photoMeta");
+
   let selectedPhotoDataUrl = "";
+
+  function setHint(msg){
+    if (photoHint) photoHint.textContent = msg || "";
+  }
 
   function initialsFromName(name) {
     const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
@@ -797,6 +827,50 @@
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
+  // Drive URLs sometimes fail inside embedded contexts due to referrer/caching.
+  // This loader:
+  // - uses PhotoURL if present,
+  // - adds a cache-buster,
+  // - applies referrerpolicy/no-referrer (already in HTML),
+  // - falls back to Drive thumbnail URL using PhotoFileId.
+  function resolvePhotoSrc(stu){
+    if (!stu) return "";
+    const url = String(stu.PhotoURL || "").trim();
+    const fileId = String(stu.PhotoFileId || "").trim();
+
+    if (url) {
+      return url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+    }
+    if (fileId) {
+      const thumb = `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w800`;
+      return thumb + "&v=" + Date.now();
+    }
+    return "";
+  }
+
+  function setBigPhoto(stu){
+    if (bigBadge) bigBadge.textContent = (stu && stu.CurrentStage) ? stu.CurrentStage : "No student loaded";
+
+    if (!bigImg) return;
+
+    const src = resolvePhotoSrc(stu);
+    if (!src) {
+      bigImg.removeAttribute("src");
+      bigImg.style.display = "none";
+      if (bigMeta) bigMeta.textContent = "No photo uploaded yet.";
+      return;
+    }
+
+    bigImg.onload = () => { bigImg.style.display = "block"; };
+    bigImg.onerror = () => {
+      bigImg.style.display = "none";
+      if (bigMeta) bigMeta.textContent = "Photo link exists, but the browser blocked it. Try Chrome/Edge, or we’ll switch to proxy mode.";
+    };
+    bigImg.src = src;
+
+    if (bigMeta) bigMeta.textContent = "Photo is saved in Drive and linked to the student record.";
+  }
+
   function renderPhotoPanel(stu) {
     if (!photoPanel) return;
 
@@ -804,15 +878,15 @@
       photoPanel.style.display = "none";
       return;
     }
-
     photoPanel.style.display = "block";
 
     const stage = String(stu.CurrentStage || "No status");
     if (appStatusBadge) appStatusBadge.textContent = stage;
 
-    const photoUrl = String(stu.PhotoURL || "").trim();
-    if (photoUrl) {
-      appPhotoImg.src = photoUrl;
+    // Small avatar: show stored photo, else local preview, else initials
+    const storedSrc = resolvePhotoSrc(stu);
+    if (storedSrc) {
+      appPhotoImg.src = storedSrc;
     } else if (selectedPhotoDataUrl) {
       appPhotoImg.src = selectedPhotoDataUrl;
     } else {
@@ -827,13 +901,15 @@
     if (uploadPhotoBtn) uploadPhotoBtn.disabled = !canUpload;
     if (clearPhotoSelectionBtn) clearPhotoSelectionBtn.disabled = !canUpload;
 
-    if (photoHint) {
-      photoHint.textContent = photoUrl
+    const hasStored = !!(String(stu.PhotoURL || "").trim() || String(stu.PhotoFileId || "").trim());
+    setHint(
+      hasStored
         ? "Current photo is saved. You can upload a new one anytime."
-        : "No photo saved yet. Choose an image and click Upload.";
-    }
+        : "No photo saved yet. Choose an image and click Upload."
+    );
   }
 
+  // ===== Photo input events =====
   if (photoInput) {
     photoInput.addEventListener("change", () => {
       const file = photoInput.files && photoInput.files[0];
@@ -854,7 +930,7 @@
       reader.onload = () => {
         selectedPhotoDataUrl = String(reader.result || "");
         renderPhotoPanel(currentStudent);
-        if (photoHint) photoHint.textContent = "Preview ready ✔ Click Upload photo to save it to Drive.";
+        setHint("Preview ready ✔ Click Upload photo to save it to Drive.");
       };
       reader.readAsDataURL(file);
     });
@@ -876,7 +952,7 @@
       if (!selectedPhotoDataUrl) return alert("Choose a photo first.");
 
       uploadPhotoBtn.disabled = true;
-      if (photoHint) photoHint.textContent = "Uploading photo…";
+      setHint("Uploading photo…");
 
       try {
         await api("uploadPhoto", {
@@ -887,23 +963,29 @@
           dataUrl: selectedPhotoDataUrl
         });
 
+        // Reload the student from sheet (pull PhotoURL + PhotoFileId)
         const stu = await api("getStudentByEmail", { email: currentStudent.Email });
+
+        // Clear local selection
         selectedPhotoDataUrl = "";
         if (photoInput) photoInput.value = "";
+
+        // Update UI and list
         setStudentUI(stu);
         await refreshList();
 
-        if (photoHint) photoHint.textContent = "Uploaded ✔ Photo is now stored in Drive and linked to the student record.";
+        setHint("Uploaded ✔ Photo is now stored in Drive and linked to the student record.");
       } catch (e) {
         alert(e.message);
-        if (photoHint) photoHint.textContent = "Upload failed. Please try again.";
+        setHint("Upload failed. Please try again.");
       } finally {
+        // Re-render based on currentStudent
         renderPhotoPanel(currentStudent);
       }
     });
   }
 
-  // Populate stages
+  // ===== Populate stages =====
   const stageSelect = document.getElementById("stageSelect");
   STAGES.forEach(s => {
     const opt = document.createElement("option");
@@ -918,61 +1000,7 @@
       `<b>${s ? s.key : "Guidance"}</b><div class="small muted" style="margin-top:6px;">${s ? s.guide : ""}</div>`;
   });
 
-  async function api(action, payload) {
-    let res;
-async function loadApplicantPhoto(stu) {
-  const img = document.getElementById("photoPreview");
-  if (!img) return;
-
-  // If no photo stored, hide
-  if (!stu || !stu.PhotoFileId) {
-    img.src = "";
-    img.style.display = "none";
-    return;
-  }
-
-  try {
-    // Ask Apps Script for base64 image (no public Drive link required)
-    const res = await api("getPhotoBase64", {
-      token: ACCESS_PIN,   // same token you already use
-      fileId: stu.PhotoFileId
-    });
-
-    img.src = res.dataUrl;
-    img.style.display = "block";
-  } catch (e) {
-    console.log("Photo load failed:", e.message);
-    img.src = "";
-    img.style.display = "none";
-  }
-}
-    try {
-      res = await fetch(API_URL, {
-        method: "POST",
-        // IMPORTANT: no Content-Type header (avoids CORS preflight)
-        body: JSON.stringify({ action, ...payload })
-      });
-    } catch (err) {
-      throw new Error("Failed to reach the API. Check the Apps Script deployment access and URL.");
-    }
-
-    const text = await res.text();
-
-    let json;
-    try {
-      json = JSON.parse(text);
-    } catch {
-      throw new Error("API did not return JSON. First 200 chars: " + text.slice(0, 200));
-    }
-
-    if (!json.ok) throw new Error(json.error || "API error");
-    return json.data;
-  }
-
-  function officer() {
-    return (document.getElementById("officerName").value || "").trim();
-  }
-
+  // ===== UI setter =====
   function setStudentUI(stu) {
     currentStudent = stu;
 
@@ -998,36 +1026,15 @@ async function loadApplicantPhoto(stu) {
       document.getElementById("stageGuidance").innerHTML =
         `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update when done.</div>`;
     }
-// ===== Photo preview + badge =====
-const img = document.getElementById("photoPreview");
-const badge = document.getElementById("photoBadge");
-const meta = document.getElementById("photoMeta");
 
-if (badge) badge.textContent = (stu && stu.CurrentStage) ? stu.CurrentStage : "No student loaded";
+    // Big preview + badge
+    setBigPhoto(stu);
 
-if (meta) {
-  meta.textContent = (stu && stu.PhotoURL)
-    ? "Photo is saved in Drive (linked in Students sheet)."
-    : "No photo uploaded yet.";
-}
-
-if (img) {
-  const src = (stu && stu.PhotoURL) ? String(stu.PhotoURL).trim() : "";
-  if (!src) {
-    img.removeAttribute("src");
-    img.style.display = "none";
-  } else {
-    // cache-buster fixes “broken image” caused by browser caching old response
-    img.onload = () => { img.style.display = "block"; };
-    img.onerror = () => { img.style.display = "none"; };
-    img.src = src + (src.includes("?") ? "&" : "?") + "v=" + Date.now();
-  }
-}
-    loadApplicantPhoto(stu);
     updateZohoButtons();
     renderPhotoPanel(stu);
   }
 
+  // ===== Students list =====
   async function refreshList() {
     const list = await api("listStudents", {});
     const tbody = document.querySelector("#studentsTable tbody");
@@ -1046,7 +1053,6 @@ if (img) {
       tbody.appendChild(tr);
     });
 
-    // Click email to load
     tbody.querySelectorAll("a[data-email]").forEach(a => {
       a.addEventListener("click", async (ev) => {
         ev.preventDefault();
@@ -1057,6 +1063,7 @@ if (img) {
     });
   }
 
+  // ===== Create / Load =====
   document.getElementById("createLoadBtn").addEventListener("click", async () => {
     const off = officer();
     if (!off) return alert("Please type the officer name first.");
@@ -1083,6 +1090,7 @@ if (img) {
     try { await refreshList(); } catch(e){ alert(e.message); }
   });
 
+  // ===== Log stage update =====
   document.getElementById("updateStageBtn").addEventListener("click", async () => {
     const off = officer();
     if (!off) return alert("Please type the officer name first.");
@@ -1102,6 +1110,7 @@ if (img) {
     }
   });
 
+  // ===== Print =====
   document.getElementById("printCardBtn").addEventListener("click", () => {
     if (!currentStudent) return;
 
@@ -1124,12 +1133,10 @@ if (img) {
     document.getElementById("printArea").style.display = "none";
   });
 
-  // Initial load
+  // ===== Initial load =====
   (async () => {
     await refreshList();
   })();
 </script>
 </body>
 </html>
-
-
