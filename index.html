@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>EuroPolytech Admissions Wizard</title>
-  
-<link rel="icon" type="image/png" href="/favicon.png">
+
+  <link rel="icon" type="image/png" href="/favicon.png">
 
   <style>
     :root{
@@ -211,17 +211,52 @@
     button.accent:hover{
       box-shadow: 0 10px 24px rgba(255,210,42,.20);
     }
-/* Zoho Prefill buttons – responsive layout */
-.zohoBtnRow{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
 
-.zohoBtnRow button{
-  flex: 1 1 220px;
-  min-width: 220px;
-}
+    /* Zoho Prefill buttons – responsive layout */
+    .zohoBtnRow{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .zohoBtnRow button{
+      flex: 1 1 220px;
+      min-width: 220px;
+    }
+
+    /* Applicant photo panel */
+    .avatarWrap{
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      box-shadow: 0 10px 24px rgba(17,24,39,.08);
+    }
+    .avatarImg{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+    .avatarBadge{
+      position:absolute;
+      left: 8px;
+      bottom: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .01em;
+      background: rgba(15,23,42,.85);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.22);
+      max-width: calc(100% - 16px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     /* Pills + table */
     .pill{
@@ -390,12 +425,12 @@
         <div class="subtitle">Lightweight operational dashboard · Google Sheets log · Manual Zoho updates</div>
       </div>
       <div class="hint" title="EuroPolytech Academy">
-  <img
-    src="https://www.europolytech.academy/EuroPolytech%20Logo%20jpeg.png"
-    alt="EuroPolytech Academy logo"
-    style="height:28px; width:auto; display:block;"
-  />
-</div>
+        <img
+          src="https://www.europolytech.academy/EuroPolytech%20Logo%20jpeg.png"
+          alt="EuroPolytech Academy logo"
+          style="height:28px; width:auto; display:block;"
+        />
+      </div>
     </div>
 
     <div class="row">
@@ -436,7 +471,41 @@
             <button class="secondary" id="refreshListBtn" style="width:100%;">Refresh list</button>
           </div>
         </div>
+
         <div id="currentStudentMeta" class="small" style="margin-top:10px;"></div>
+
+        <!-- Applicant Photo Panel -->
+        <div id="photoPanel" class="card" style="margin-top:12px; display:none;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="avatarWrap">
+                <img id="appPhotoImg" class="avatarImg" alt="Applicant photo" />
+                <div id="appStatusBadge" class="avatarBadge">No status</div>
+              </div>
+
+              <div>
+                <div style="font-weight:900; letter-spacing:-0.02em;">Applicant photo</div>
+                <div class="small muted" id="photoMetaLine">Load a student to manage photo.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <label>Upload / update photo</label>
+            <input id="photoInput" type="file" accept="image/*" />
+
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+              <button id="uploadPhotoBtn" class="accent" disabled style="flex:1 1 220px;">
+                Upload photo
+              </button>
+              <button id="clearPhotoSelectionBtn" class="secondary" disabled style="flex:1 1 220px;">
+                Clear selection
+              </button>
+            </div>
+
+            <div id="photoHint" class="small muted" style="margin-top:8px;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -452,23 +521,24 @@
         <select id="stageSelect" disabled>
           <option value="">Select stage…</option>
         </select>
-<!-- Acceptance & Declarations (Zoho Prefill) -->
-<div style="margin-top:10px;">
-  <div class="small muted" style="margin-bottom:8px;">
-    Use this when the stage is <b>Conditional LoA Issued</b>. This opens a pre-filled Zoho form for the loaded student.
-  </div>
 
-  <div class="zohoBtnRow">
-    <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">
-      Open Acceptance & Declarations Form
-    </button>
-    <button id="copyZohoPrefillBtn" class="secondary" disabled style="width:100%;">
-      Copy link
-    </button>
-  </div>
+        <!-- Acceptance & Declarations (Zoho Prefill) -->
+        <div id="zohoBlock" style="margin-top:10px; display:none;">
+          <div class="small muted" style="margin-bottom:8px;">
+            Use this when the stage is <b>Eligible – Conditional</b>. This opens a pre-filled Zoho form for the loaded student.
+          </div>
 
-  <div id="zohoPrefillHint" class="small muted" style="margin-top:8px;"></div>
-</div>
+          <div class="zohoBtnRow">
+            <button id="openZohoPrefillBtn" class="accent" disabled style="width:100%;">
+              Open Acceptance & Declarations Form
+            </button>
+            <button id="copyZohoPrefillBtn" class="secondary" disabled style="width:100%;">
+              Copy link
+            </button>
+          </div>
+
+          <div id="zohoPrefillHint" class="small muted" style="margin-top:8px;"></div>
+        </div>
 
         <label>Details / note (will be logged)</label>
         <textarea id="details" rows="3" placeholder="E.g., Checked passport + academic docs. Missing English certificate; requested via email."></textarea>
@@ -534,25 +604,26 @@
 
   // ===== PIN CONFIG =====
   const ACCESS_PIN = "Europolytech25.";
-// ===== Zoho Prefill Form (Acceptance & Declarations) =====
-const ZOHO_FORM_BASE_URL =
-  "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
 
-// Build a prefilled Zoho Forms URL from the currently loaded student
-function buildZohoPrefillUrl(stu) {
-  if (!stu) return "";
+  // ===== Zoho Prefill Form (Acceptance & Declarations) =====
+  const ZOHO_FORM_BASE_URL =
+    "https://forms.europolytech.academy/EuroPolytech/form/EuroPolytechOfferAcceptanceDeclarations/formperma/g8qUUaReFy8JQpuIGo0EnBb9jZ2DUUXaqkIU3ADJgTs";
 
-  const params = new URLSearchParams({
-    StudentID: stu.StudentID || "",
-    FullName: stu.FullName || "",
-    Email: stu.Email || "",
-    Programme: stu.Programme || "",
-    Intake: stu.Intake || "",
-    Nationality: stu.Nationality || ""
-  });
+  // Build a prefilled Zoho Forms URL from the currently loaded student
+  function buildZohoPrefillUrl(stu) {
+    if (!stu) return "";
 
-  return `${ZOHO_FORM_BASE_URL}?${params.toString()}`;
-}
+    const params = new URLSearchParams({
+      StudentID: stu.StudentID || "",
+      FullName: stu.FullName || "",
+      Email: stu.Email || "",
+      Programme: stu.Programme || "",
+      Intake: stu.Intake || "",
+      Nationality: stu.Nationality || ""
+    });
+
+    return `${ZOHO_FORM_BASE_URL}?${params.toString()}`;
+  }
 
   function checkPin() {
     const entered = (document.getElementById("pinInput").value || "").trim();
@@ -595,45 +666,196 @@ function buildZohoPrefillUrl(stu) {
 
   // ====== State ======
   let currentStudent = null;
-// ===== Zoho Prefill Buttons wiring =====
-const openZohoBtn = document.getElementById("openZohoPrefillBtn");
-const copyZohoBtn = document.getElementById("copyZohoPrefillBtn");
-const zohoHint = document.getElementById("zohoPrefillHint");
 
-function updateZohoButtons() {
-  const hasStudent = !!(currentStudent && currentStudent.Email);
-  if (openZohoBtn) openZohoBtn.disabled = !hasStudent;
-  if (copyZohoBtn) copyZohoBtn.disabled = !hasStudent;
+  // ===== Zoho Prefill Buttons wiring =====
+  const openZohoBtn = document.getElementById("openZohoPrefillBtn");
+  const copyZohoBtn = document.getElementById("copyZohoPrefillBtn");
+  const zohoHint = document.getElementById("zohoPrefillHint");
 
-  if (zohoHint) {
-    zohoHint.textContent = hasStudent
-      ? "Ready: click Open to launch the pre-filled form, or Copy link to paste into the Conditional LoA email."
-      : "";
-  }
-}
+  function updateZohoButtons() {
+    const hasStudent = !!(currentStudent && currentStudent.Email);
 
-if (openZohoBtn) {
-  openZohoBtn.addEventListener("click", () => {
-    if (!currentStudent) return alert("Load a student first.");
-    const url = buildZohoPrefillUrl(currentStudent);
-    window.open(url, "_blank", "noopener,noreferrer");
-  });
-}
+    // Stage rule: show only when Eligible – Conditional (support both dash types)
+    const stage = String((currentStudent && currentStudent.CurrentStage) || "");
+    const eligibleConditional =
+      stage === "Eligible – Conditional" || stage === "Eligible - Conditional";
 
-if (copyZohoBtn) {
-  copyZohoBtn.addEventListener("click", async () => {
-    if (!currentStudent) return alert("Load a student first.");
-    const url = buildZohoPrefillUrl(currentStudent);
+    const zohoBlock = document.getElementById("zohoBlock");
+    if (zohoBlock) zohoBlock.style.display = (hasStudent && eligibleConditional) ? "block" : "none";
 
-    try {
-      await navigator.clipboard.writeText(url);
-      if (zohoHint) zohoHint.textContent = "Copied ✔ Now paste it into the Conditional LoA email.";
-    } catch {
-      // Fallback if clipboard permission is blocked
-      prompt("Copy this link:", url);
+    const enable = hasStudent && eligibleConditional;
+    if (openZohoBtn) openZohoBtn.disabled = !enable;
+    if (copyZohoBtn) copyZohoBtn.disabled = !enable;
+
+    if (zohoHint) {
+      zohoHint.textContent = enable
+        ? "Ready: click Open to launch the pre-filled form, or Copy link to paste into the eligibility email."
+        : "";
     }
-  });
-}
+  }
+
+  if (openZohoBtn) {
+    openZohoBtn.addEventListener("click", () => {
+      if (!currentStudent) return alert("Load a student first.");
+      const url = buildZohoPrefillUrl(currentStudent);
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+  }
+
+  if (copyZohoBtn) {
+    copyZohoBtn.addEventListener("click", async () => {
+      if (!currentStudent) return alert("Load a student first.");
+      const url = buildZohoPrefillUrl(currentStudent);
+
+      try {
+        await navigator.clipboard.writeText(url);
+        if (zohoHint) zohoHint.textContent = "Copied ✔ Now paste it into the eligibility email.";
+      } catch {
+        prompt("Copy this link:", url);
+      }
+    });
+  }
+
+  // ===== Photo Upload wiring =====
+  const photoPanel = document.getElementById("photoPanel");
+  const photoInput = document.getElementById("photoInput");
+  const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
+  const clearPhotoSelectionBtn = document.getElementById("clearPhotoSelectionBtn");
+  const appPhotoImg = document.getElementById("appPhotoImg");
+  const appStatusBadge = document.getElementById("appStatusBadge");
+  const photoHint = document.getElementById("photoHint");
+  const photoMetaLine = document.getElementById("photoMetaLine");
+
+  let selectedPhotoDataUrl = "";
+
+  function initialsFromName(name) {
+    const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+    const a = parts[0] ? parts[0][0] : "E";
+    const b = parts[1] ? parts[1][0] : "P";
+    return (a + b).toUpperCase();
+  }
+
+  function makeInitialsAvatarDataUrl(initials) {
+    const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="rgba(35,79,235,0.25)"/>
+          <stop offset="100%" stop-color="rgba(255,210,42,0.25)"/>
+        </linearGradient>
+      </defs>
+      <rect width="100%" height="100%" rx="24" fill="url(#g)"/>
+      <text x="50%" y="54%" font-size="46" font-family="Arial" font-weight="800"
+            fill="#0f172a" text-anchor="middle" dominant-baseline="middle">${initials}</text>
+    </svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+
+  function renderPhotoPanel(stu) {
+    if (!photoPanel) return;
+
+    if (!stu || !stu.Email) {
+      photoPanel.style.display = "none";
+      return;
+    }
+
+    photoPanel.style.display = "block";
+
+    const stage = String(stu.CurrentStage || "No status");
+    if (appStatusBadge) appStatusBadge.textContent = stage;
+
+    const photoUrl = String(stu.PhotoURL || "").trim();
+    if (photoUrl) {
+      appPhotoImg.src = photoUrl;
+    } else if (selectedPhotoDataUrl) {
+      appPhotoImg.src = selectedPhotoDataUrl;
+    } else {
+      appPhotoImg.src = makeInitialsAvatarDataUrl(initialsFromName(stu.FullName));
+    }
+
+    if (photoMetaLine) {
+      photoMetaLine.textContent = `StudentID: ${stu.StudentID || "—"} · Email: ${stu.Email || "—"}`;
+    }
+
+    const canUpload = !!selectedPhotoDataUrl;
+    if (uploadPhotoBtn) uploadPhotoBtn.disabled = !canUpload;
+    if (clearPhotoSelectionBtn) clearPhotoSelectionBtn.disabled = !canUpload;
+
+    if (photoHint) {
+      photoHint.textContent = photoUrl
+        ? "Current photo is saved. You can upload a new one anytime."
+        : "No photo saved yet. Choose an image and click Upload.";
+    }
+  }
+
+  if (photoInput) {
+    photoInput.addEventListener("change", () => {
+      const file = photoInput.files && photoInput.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        photoInput.value = "";
+        return;
+      }
+      if (file.size > 3 * 1024 * 1024) {
+        alert("Please use a smaller image (max ~3MB).");
+        photoInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        selectedPhotoDataUrl = String(reader.result || "");
+        renderPhotoPanel(currentStudent);
+        if (photoHint) photoHint.textContent = "Preview ready ✔ Click Upload photo to save it to Drive.";
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (clearPhotoSelectionBtn) {
+    clearPhotoSelectionBtn.addEventListener("click", () => {
+      selectedPhotoDataUrl = "";
+      if (photoInput) photoInput.value = "";
+      renderPhotoPanel(currentStudent);
+    });
+  }
+
+  if (uploadPhotoBtn) {
+    uploadPhotoBtn.addEventListener("click", async () => {
+      const off = officer();
+      if (!off) return alert("Please type the officer name first.");
+      if (!currentStudent || !currentStudent.Email) return alert("Load a student first.");
+      if (!selectedPhotoDataUrl) return alert("Choose a photo first.");
+
+      uploadPhotoBtn.disabled = true;
+      if (photoHint) photoHint.textContent = "Uploading photo…";
+
+      try {
+        await api("uploadPhoto", {
+          token: ACCESS_PIN,
+          email: currentStudent.Email,
+          studentId: currentStudent.StudentID,
+          officer: off,
+          dataUrl: selectedPhotoDataUrl
+        });
+
+        const stu = await api("getStudentByEmail", { email: currentStudent.Email });
+        selectedPhotoDataUrl = "";
+        if (photoInput) photoInput.value = "";
+        setStudentUI(stu);
+        await refreshList();
+
+        if (photoHint) photoHint.textContent = "Uploaded ✔ Photo is now stored in Drive and linked to the student record.";
+      } catch (e) {
+        alert(e.message);
+        if (photoHint) photoHint.textContent = "Upload failed. Please try again.";
+      } finally {
+        renderPhotoPanel(currentStudent);
+      }
+    });
+  }
 
   // Populate stages
   const stageSelect = document.getElementById("stageSelect");
@@ -650,31 +872,31 @@ if (copyZohoBtn) {
       `<b>${s ? s.key : "Guidance"}</b><div class="small muted" style="margin-top:6px;">${s ? s.guide : ""}</div>`;
   });
 
-async function api(action, payload) {
-  let res;
+  async function api(action, payload) {
+    let res;
 
-  try {
-    res = await fetch(API_URL, {
-      method: "POST",
-      // IMPORTANT: no Content-Type header (avoids CORS preflight)
-      body: JSON.stringify({ action, ...payload })
-    });
-  } catch (err) {
-    throw new Error("Failed to reach the API. Check the Apps Script deployment access and URL.");
+    try {
+      res = await fetch(API_URL, {
+        method: "POST",
+        // IMPORTANT: no Content-Type header (avoids CORS preflight)
+        body: JSON.stringify({ action, ...payload })
+      });
+    } catch (err) {
+      throw new Error("Failed to reach the API. Check the Apps Script deployment access and URL.");
+    }
+
+    const text = await res.text();
+
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      throw new Error("API did not return JSON. First 200 chars: " + text.slice(0, 200));
+    }
+
+    if (!json.ok) throw new Error(json.error || "API error");
+    return json.data;
   }
-
-  const text = await res.text();
-
-  let json;
-  try {
-    json = JSON.parse(text);
-  } catch {
-    throw new Error("API did not return JSON. First 200 chars: " + text.slice(0, 200));
-  }
-
-  if (!json.ok) throw new Error(json.error || "API error");
-  return json.data;
-}
 
   function officer() {
     return (document.getElementById("officerName").value || "").trim();
@@ -700,13 +922,14 @@ async function api(action, payload) {
     document.getElementById("updateStageBtn").disabled = !stu;
     document.getElementById("printCardBtn").disabled = !stu;
 
-      if (stu) {
+    if (stu) {
       stageSelect.value = "";
       document.getElementById("stageGuidance").innerHTML =
         `<b>Next step</b><div class="small muted" style="margin-top:6px;">Select a stage to see guidance, then log the update when done.</div>`;
     }
 
     updateZohoButtons();
+    renderPhotoPanel(stu);
   }
 
   async function refreshList() {
@@ -807,18 +1030,8 @@ async function api(action, payload) {
 
   // Initial load
   (async () => {
-    if (API_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")) {
-      alert("Set API_URL in the HTML to your Apps Script Web App URL.");
-      return;
-    }
     await refreshList();
   })();
 </script>
 </body>
 </html>
-
-
-
-
-
-
