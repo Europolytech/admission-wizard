@@ -23,7 +23,7 @@ async function getTemplate(){
  $('blsStatus').textContent='Chargez une seule fois le PDF BLS officiel vierge pour remplir sa mise en page exacte.';
  $('blsTemplateInput').click();throw Error('Modèle BLS original nécessaire : sélectionnez le fichier PDF fourni par BLS.');
 }
-function textValue(id){if(id==='f32a_other'||id==='f32c_other')return '';return String(data[id]||'').trim()}
+function textValue(id){return String(data[id]||'').trim()}
 function clipToBox(font,s,widthPx,linesMax,fontSize){
  let words=String(s).replace(/\s+/g,' ').trim().split(' ').filter(Boolean);
  if(!words.length)return {lines:[],missing:''};
