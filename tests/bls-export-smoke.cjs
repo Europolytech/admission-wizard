@@ -9,7 +9,7 @@ const template=fs.readFileSync(path.join(base,'bls-morocco-official.pdf'));
 const rules=fs.readFileSync(path.join(base,'visa-rules.js'),'utf8');
 const code=fs.readFileSync(path.join(base,'bls-original-export.js'),'utf8');
 const elements={};
-for(const id of ['blsPreview','blsExport','blsPrint','blsLoad','blsTemplateInput','status','blsStatus','blsPreviewFrame','blsPreviewDialog','blsApproval','blsApproveButton','blsPreviewClose']){
+for(const id of ['blsPreview','blsExport','blsPrint','blsLoad','blsTemplateInput','status','blsStatus','blsPreviewFrame','blsPreviewDialog','blsApproval','blsApproveButton','blsPreviewClose','blsPreviewOpen']){
  elements[id]={disabled:false,textContent:'',checked:false,files:[],click(){},close(){this.open=false},showModal(){this.open=true}};
 }
 const urls=[];
