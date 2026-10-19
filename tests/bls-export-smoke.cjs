@@ -7,6 +7,8 @@ const PDFLib=require('pdf-lib');
 const base=path.join(__dirname,'..','visa-schengen-portugal');
 const template=fs.readFileSync(path.join(base,'bls-morocco-official.pdf'));
 const rules=fs.readFileSync(path.join(base,'visa-rules.js'),'utf8');
+const html=fs.readFileSync(path.join(base,'index.html'),'utf8');
+for(const token of ['visa-rules.js','blsPreviewDialog','blsPreviewOpen','workStatus','f29Applicable','f33self','noindex'])assert(html.includes(token),'Missing user-facing feature '+token);
 const code=fs.readFileSync(path.join(base,'bls-original-export.js'),'utf8');
 const elements={};
 for(const id of ['blsPreview','blsExport','blsPrint','blsLoad','blsTemplateInput','status','blsStatus','blsPreviewFrame','blsPreviewDialog','blsApproval','blsApproveButton','blsPreviewClose','blsPreviewOpen']){
@@ -49,6 +51,8 @@ vm.runInNewContext(code,context,{filename:'bls-original-export.js'});
  assert.equal(clean.f32c,'','Self-funded applicant must not retain guarantor benefits');
  assert.equal(clean.f33,'','Self-completed application must leave third-party completer blank');
  assert.equal(vr.validate({...data,screenResidence:'United Kingdom'},[]).warnings.some(x=>x.field==='screenResidence'),true);
+ assert.equal(vr.sanitized({...data,workStatus:'Not working / retired'}).f22,'');
+ assert.equal(vr.validate({...data,workStatus:'Employed / self-employed',f22:'Example employer, London'},[]).errors.some(x=>x.field==='f22'),true,'Employed person must provide employer contact number');
  assert.equal(vr.validate({...data,screenPassport:'British citizen (UK)'},[]).warnings.some(x=>x.field==='screenPassport'),true);
  console.log('PASS: Funding, preparer and jurisdiction validation rules');
 
