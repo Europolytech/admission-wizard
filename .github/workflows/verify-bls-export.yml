@@ -1,0 +1,21 @@
+name: Verify original BLS Morocco PDF export
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tests/bls-export-smoke.cjs'
+      - '.github/workflows/verify-bls-export.yml'
+      - 'visa-schengen-portugal/bls-original-export.js'
+      - 'visa-schengen-portugal/bls-morocco-official.pdf'
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install PDF library
+        run: npm install --no-save --no-package-lock pdf-lib@1.17.1
+      - name: Test filling the original four-page PDF
+        run: node tests/bls-export-smoke.cjs
