@@ -6,6 +6,8 @@ on:
       - 'tests/bls-export-smoke.cjs'
       - '.github/workflows/verify-bls-export.yml'
       - 'visa-schengen-portugal/bls-original-export.js'
+      - 'visa-schengen-portugal/visa-rules.js'
+      - 'visa-schengen-portugal/index.html'
       - 'visa-schengen-portugal/bls-morocco-official.pdf'
 jobs:
   smoke-test:
