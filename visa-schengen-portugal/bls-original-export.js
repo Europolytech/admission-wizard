@@ -98,6 +98,7 @@ async function exportOriginal(action){
  else{const link=document.createElement('a');link.href=url;link.download='BLS_Portugal_Morocco_Completed_'+String(data.f1||'Applicant').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'_').slice(0,40)+'.pdf';document.body.append(link);link.click();link.remove();status('Formulaire original BLS téléchargé après vérification. Ajoutez la photographie conforme et signez.')}
  setTimeout(()=>URL.revokeObjectURL(url),120000);
 }
+window.blsPdfPreview=showPreview;
 $('blsPreview').onclick=showPreview;
 $('blsApproveButton').onclick=()=>{if(!$('blsApproval').checked){status('Veuillez confirmer avoir relu les quatre pages du BLS.');return}if(reviewed)reviewed.approved=true;$('blsPreviewDialog').close();status('Aperçu confirmé. Vous pouvez télécharger ou imprimer le PDF rempli.');};
 $('blsPreviewClose').onclick=()=>$('blsPreviewDialog').close();
