@@ -22,8 +22,8 @@ jobs:
             'https://www.blsinternational.com/portugal/morocco/visa-form/schengen-visa-application-form-FR.pdf' \
             -o visa-schengen-portugal/bls-morocco-official.pdf
           file visa-schengen-portugal/bls-morocco-official.pdf
-          pdfinfo visa-schengen-portugal/bls-morocco-official.pdf | grep -E '^Pages:[[:space:]]+4$'
-          pdftotext visa-schengen-portugal/bls-morocco-official.pdf - | grep -qi 'Formulaire de demande harmonisé'
+          echo 'aeda814bec2ab040d23ba3abec7085fcff36a70df9cf044f7f3fd42c437629f6  visa-schengen-portugal/bls-morocco-official.pdf' | sha256sum --check --status
+          echo 'Verified: exact BLS Morocco PDF version supplied by EuroPolytech.'
       - name: Commit blank PDF template
         shell: bash
         run: |
