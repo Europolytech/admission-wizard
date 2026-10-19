@@ -71,7 +71,7 @@ function validate(source,fields=[]){
  if(d.f14&&d.arrival){const issue=new Date(d.f14+'T00:00:00Z'),arr=new Date(d.arrival+'T00:00:00Z'),limit=new Date(arr);limit.setUTCFullYear(limit.getUTCFullYear()-10);if(issue<limit)w('f14','Le passeport peut être trop ancien selon les conditions d’entrée Schengen (délivré il y a plus de 10 ans).')}
  if(!d.screenResidence)w('screenResidence','Indiquez votre pays de résidence légale pour contrôler la compétence consulaire.');
  else if(!/^(maroc|morocco)$/i.test(String(d.screenResidence).trim()))w('screenResidence','La résidence légale déclarée n’est pas le Maroc. Le centre BLS Maroc n’est généralement pas le lieu de dépôt approprié.');
- if(d.screenPassport==='British citizen (UK)'&&days&&days<=90)w('screenPassport','Un citoyen britannique voyageant pour un court séjour peut être dispensé de visa Schengen. Vérifiez les exceptions, la finalité et la règle des 90/180 jours avant de déposer une demande.');
+ if(d.screenPassport==='British citizen (UK)'&&(!days||days<=90))w('screenPassport','Un citoyen britannique voyageant pour un court séjour peut être dispensé de visa Schengen. Vérifiez les exceptions, la finalité et la règle des 90/180 jours avant de déposer une demande.');
  if(d.screenPassport==='Other / unclear'||!d.screenPassport)w('screenPassport','Vérifiez si ce passeport nécessite un visa et si la catégorie C convient.');
  if(d.f25&&!String(d.f25).toLowerCase().includes('portug'))w('f25','Cet assistant est prévu pour le Portugal comme destination principale ; vérifiez l’État compétent.');
  if(d.f26&&d.f25&&d.f26.toLowerCase()!==d.f25.toLowerCase())info.push({field:'f26',message:'Première entrée différente de la destination principale : vérifiez que l’itinéraire le justifie.'});
