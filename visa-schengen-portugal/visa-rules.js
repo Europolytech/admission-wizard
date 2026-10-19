@@ -8,6 +8,7 @@ function sanitized(source){
  const d={...source};
  if(d.f7b&&d.f7&&d.f7b.trim().toLowerCase()===d.f7.trim().toLowerCase())d.f7b='';
  if(d.f20!=='Oui'){d.f20b='';d.f20c=''}
+ if(d.workStatus==='Not working / retired')d.f22='';
  if(d.f28!=='Oui'){d.f28b='';d.f28c=''}
  if(d.f29Applicable!=='Oui'){permitKeys.forEach(k=>d[k]='')}
  if(d.f33self!=='Non'){personalKeys.forEach(k=>d[k]='')}
@@ -25,6 +26,7 @@ function sanitized(source){
 }
 function fieldVisible(id,d){
  if(['f20b','f20c'].includes(id))return d.f20==='Oui';
+ if(id==='f22')return d.workStatus!=='Not working / retired';
  if(priorKeys.includes(id))return d.f28==='Oui';
  if(permitKeys.includes(id))return d.f29Applicable==='Oui';
  if(personalKeys.includes(id))return d.f33self==='Non';
@@ -60,7 +62,8 @@ function validate(source,fields=[]){
  if(d.f33self==='Oui'&&source.f33&&String(source.f33).trim())w('f33','Les renseignements sur la personne tierce seront exclus si vous remplissez votre propre demande.');
  if(d.f30role==='Hôtel / hébergement' && d.f30 && d.f31 && String(d.f30).trim().toLowerCase()===String(d.f31).trim().toLowerCase())w('f30','Q30 et Q31 portent le même nom. Vérifiez que l’organisme est réellement votre hébergement.');
  if(d.f30role!=='Personne invitante'&&blank(d.f30))w('f30','Indiquez l’hôtel, le logement ou l’invitant réel et sa réservation, pas simplement le lieu de formation.');
- if(d.f22&&!/[+\d][\d\s().-]{6,}/.test(d.f22))w('f22','Indiquez également le numéro de téléphone de l’employeur/établissement.');
+ if(['Employed / self-employed','Student'].includes(d.workStatus)&&blank(d.f22))e('f22','Indiquez le nom, l’adresse et le téléphone de l’employeur ou de l’établissement scolaire.');
+ if(['Employed / self-employed','Student'].includes(d.workStatus)&&d.f22&&!/[+\d][\d\s().-]{6,}/.test(d.f22))e('f22','Le numéro de téléphone de l’employeur/établissement manque à la question 22.');
  if(d.f24&&d.f24.trim().length<42)w('f24','Précisez l’intitulé du programme, la nature de la formation et les dates, conformément aux justificatifs.');
  if(d.f7b&&d.f7&&d.f7b.toLowerCase()===d.f7.toLowerCase())w('f7b','La nationalité de naissance ne doit être indiquée que si elle est différente.');
  if(d.arrival&&d.departure&&d.departure<d.arrival)e('departure','La date de sortie Schengen précède la date d’arrivée.');
