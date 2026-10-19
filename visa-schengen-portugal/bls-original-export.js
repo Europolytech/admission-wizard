@@ -102,6 +102,7 @@ window.blsPdfPreview=showPreview;
 $('blsPreview').onclick=showPreview;
 $('blsApproveButton').onclick=()=>{if(!$('blsApproval').checked){status('Veuillez confirmer avoir relu les quatre pages du BLS.');return}if(reviewed)reviewed.approved=true;$('blsPreviewDialog').close();status('Aperçu confirmé. Vous pouvez télécharger ou imprimer le PDF rempli.');};
 $('blsPreviewClose').onclick=()=>$('blsPreviewDialog').close();
+$('blsPreviewOpen').onclick=()=>{if(previewUrl)window.open(previewUrl,'_blank');};
 $('blsExport').onclick=()=>exportOriginal('download');
 $('blsPrint').onclick=()=>exportOriginal('print');
 $('blsLoad').onclick=()=>$('blsTemplateInput').click();
