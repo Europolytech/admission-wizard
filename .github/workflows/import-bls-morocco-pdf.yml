@@ -1,0 +1,37 @@
+name: Import official BLS Morocco blank PDF
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-bls-morocco-pdf.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and inspect BLS Portugal Morocco blank form
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p visa-schengen-portugal
+          curl --fail --location --retry 3 --retry-delay 3 \
+            --user-agent 'Mozilla/5.0 (compatible; EuroPolytech PDF Template Import)' \
+            --referer 'https://www.blsinternational.com/portugal/morocco/schengen-general.php' \
+            'https://www.blsinternational.com/portugal/morocco/visa-form/schengen-visa-application-form-FR.pdf' \
+            -o visa-schengen-portugal/bls-morocco-official.pdf
+          file visa-schengen-portugal/bls-morocco-official.pdf
+          pdfinfo visa-schengen-portugal/bls-morocco-official.pdf | grep -E '^Pages:[[:space:]]+4$'
+          pdftotext visa-schengen-portugal/bls-morocco-official.pdf - | grep -qi 'Formulaire de demande harmonisé'
+      - name: Commit blank PDF template
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add visa-schengen-portugal/bls-morocco-official.pdf
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add official BLS Morocco blank Schengen PDF template'
+            git push
+          fi
