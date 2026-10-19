@@ -7,14 +7,16 @@ Private-use preparation assistant for the harmonised short-stay Schengen applica
 - Reference: BLS Portugal Morocco French-language Schengen form supplied by EuroPolytech (version with **33 numbered questions**).
 - Interface instructions are in French; **free-text applicant answers should be in English or Portuguese, using Latin characters**, in line with [BLS Schengen General document requirements](https://www.blsinternational.com/portugal/morocco/schengen-general.php). Copy names from the travel document without alteration.
 - Fields 1–33, their associated subfields, visit dates, signature date, accommodation and funding are included. The official application reserves additional sections for administration.
-- **The PDF this app exports is a structured preparation record, not a filled copy of the original BLS PDF**. It must not be submitted as a substitute for BLS's original. Original form needs manual signature, and BLS supporting documents, photos and appointment.
+- The app now offers **two PDF outputs**: (1) the original four-page BLS Morocco blank form with questionnaire answers stamped in the corresponding fields and checkboxes; (2) a separate preparation summary. The original template is checked against the exact SHA-256 digest of the user-supplied BLS PDF before use. The signed official form still requires a compliant photograph, personal signature, careful review, and BLS supporting documents/appointment. Long entries that cannot fit in a printed box are flagged in an appendix, which may not be accepted by the consulate.
 
 ## Features
 
 - Seven-step guided workflow and completion tracking.
 - French instructions with English/Portuguese answer guidance.
 - Cross-checks for passport and trip dates.
-- PDF preparation copy and print.
+- Original BLS Morocco PDF overlay export and print preview, with all 33 numbered questions mapped to their printed locations and checkboxes.
+- Separate PDF preparation copy and browser print.
+- Official blank PDF is bundled as `bls-morocco-official.pdf` through a GitHub Action. If temporarily unavailable, select the exact four-page BLS form once using `Charger le formulaire BLS original`; its blank bytes are cached locally for future visits, never sent to a server.
 - **Local AES-GCM encrypted draft**; select `Enregistrer un brouillon`, choose a **separate personal draft passphrase** (minimum 10 characters) and save.
 - Recover local draft via `Reprendre un brouillon` and the personal passphrase.
 - Export a portable encrypted JSON backup and import from another device, retaining its personal passphrase.
